@@ -15,9 +15,10 @@ jobs:
           export ANDROID_SDK_ROOT=/usr/local/lib/android/sdk
           export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
           yes | sdkmanager --licenses > /dev/null 2>&1 || true
-          sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools" > /dev/null 2>&1 || true
-          rm -rf app build.gradle settings.gradle gradle gradlew*.gradle local.properties
+          sdkmanager "platforms;android-34" "build-tools;34.0.0" > /dev/null 2>&1 || true
+          rm -rf app build.gradle settings.gradle gradle gradlew* local.properties
           mkdir -p app/src/main/java/com/safeguard/onehub
+          mkdir -p app/src/main/res/values
           echo 'include ":app"' > settings.gradle
           cat > build.gradle <<'EOF'
           buildscript {
@@ -35,7 +36,7 @@ jobs:
               applicationId "com.safeguard.onehub"
               minSdk 24
               targetSdk 34
-              versionCode 8
+              versionCode 9
               versionName "1.0"
             }
           }
@@ -43,11 +44,19 @@ jobs:
             implementation 'androidx.appcompat:appcompat:1.6.1'
           }
           EOF
+          cat > app/src/main/res/values/themes.xml <<'EOF'
+          <resources>
+            <style name="Theme.NDALA" parent="Theme.AppCompat.Light.NoActionBar"/>
+          </resources>
+          EOF
+          cat > app/src/main/res/values/strings.xml <<'EOF'
+          <resources><string name="app_name">NDALA</string></resources>
+          EOF
           cat > app/src/main/AndroidManifest.xml <<'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <manifest xmlns:android="http://schemas.android.com/apk/res/android">
             <uses-permission android:name="android.permission.INTERNET"/>
-            <application android:label="NDALA">
+            <application android:label="@string/app_name" android:theme="@style/Theme.NDALA">
               <activity android:name=".MainActivity" android:exported="true">
                 <intent-filter>
                   <action android:name="android.intent.action.MAIN"/>
@@ -74,7 +83,7 @@ jobs:
               w.setWebViewClient(new WebViewClient() {
                 public boolean shouldOverrideUrlLoading(WebView v, WebResourceRequest r) {
                   String u = r.getUrl().toString().toLowerCase();
-                  if (u.contains("pornhub") || u.contains("xvideos") || u.contains("xnxx") || u.contains("xhamster")) {
+                  if (u.contains("pornhub") || u.contains("xvideos") || u.contains("xnxx")) {
                     v.loadData("<h1>Blocked by NDALA</h1>","text/html","UTF-8");
                     return true;
                   }
