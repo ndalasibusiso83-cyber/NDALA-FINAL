@@ -19,8 +19,40 @@ jobs:
           mkdir -p app/src/main/java/com/safeguard/onehub
           mkdir -p app/src/main/res/values app/src/main/res/layout app/src/main/res/drawable app/src/main/assets
           echo 'include ":app"' > settings.gradle
-          echo 'buildscript{repositories{google();mavenCentral()}dependencies{classpath "com.android.tools.build:gradle:8.2.2"}}allprojects{repositories{google();mavenCentral()}}' > build.gradle
-          echo 'plugins{id "com.android.application"} android{namespace "com.safeguard.onehub" compileSdk 34 defaultConfig{applicationId "com.safeguard.onehub" minSdk 24 targetSdk 34 versionCode 15 versionName "3.0 Founder"} }' > app/build.gradle
+
+          cat > build.gradle <<'EOF'
+          buildscript {
+            repositories {
+              google()
+              mavenCentral()
+            }
+            dependencies {
+              classpath "com.android.tools.build:gradle:8.2.2"
+            }
+          }
+          allprojects {
+            repositories {
+              google()
+              mavenCentral()
+            }
+          }
+          EOF
+
+          cat > app/build.gradle <<'EOF'
+          apply plugin: "com.android.application"
+          android {
+            namespace "com.safeguard.onehub"
+            compileSdk 34
+            defaultConfig {
+              applicationId "com.safeguard.onehub"
+              minSdk 24
+              targetSdk 34
+              versionCode 16
+              versionName "3.0 Founder"
+            }
+          }
+          EOF
+
           cat > app/src/main/res/values/strings.xml <<'EOF'
           <resources><string name="app_name">SafeGuard One Hub</string></resources>
           EOF
@@ -45,6 +77,7 @@ jobs:
           cat > app/src/main/res/drawable/creator_bg.xml <<'EOF'
           <shape xmlns:android="http://schemas.android.com/apk/res/android"><solid android:color="#0B3D1F"/><corners android:radius="20dp"/></shape>
           EOF
+
           cat > app/src/main/res/layout/activity_main.xml <<'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#FFFFFF">
@@ -60,6 +93,7 @@ jobs:
           <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="All protections are active • Last updated now" android:textSize="11sp" android:textColor="#888888" android:gravity="center" android:layout_marginTop="12dp" android:layout_marginBottom="20dp"/>
           </LinearLayout></ScrollView>
           EOF
+
           cat > app/src/main/AndroidManifest.xml <<'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <manifest xmlns:android="http://schemas.android.com/apk/res/android">
@@ -70,6 +104,7 @@ jobs:
             </application>
           </manifest>
           EOF
+
           cat > app/src/main/java/com/safeguard/onehub/MainActivity.java <<'EOF'
           package com.safeguard.onehub;
           import android.app.Activity;
@@ -86,6 +121,7 @@ jobs:
             }
           }
           EOF
+
           cat > app/src/main/java/com/safeguard/onehub/BrowserActivity.java <<'EOF'
           package com.safeguard.onehub;
           import android.app.Activity;
@@ -116,13 +152,13 @@ jobs:
             public void onBackPressed(){ if(w.canGoBack()) w.goBack(); else super.onBackPressed(); }
           }
           EOF
+
           dd if=/dev/urandom of=app/src/main/assets/data.bin bs=1M count=3 2>/dev/null
           wget -q https://services.gradle.org/distributions/gradle-8.7-bin.zip
           unzip -q gradle-8.7-bin.zip
           ./gradle-8.7/bin/gradle wrapper --gradle-version 8.7
           chmod +x gradlew
           ./gradlew app:assembleDebug
-          ls -lh app/build/outputs/apk/debug/
       - uses: actions/upload-artifact@v4
         with:
           name: NDALA-SIBUSISO-FOUNDER-FINAL
