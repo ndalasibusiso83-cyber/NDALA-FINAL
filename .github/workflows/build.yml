@@ -9,25 +9,15 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Setup SDK
-        run: |
-          mkdir -p $HOME/android-sdk/cmdline-tools
-          cd $HOME/android-sdk/cmdline-tools
-          wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O tools.zip
-          unzip -q tools.zip
-          mkdir -p latest
-          mv cmdline-tools/* latest/ 2>/dev/null || true
-          mv lib latest/ 2>/dev/null || true
-          echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
-          echo "$HOME/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
       - name: Build NDALA
         run: |
-          export ANDROID_HOME=$HOME/android-sdk
-          export PATH=$HOME/android-sdk/cmdline-tools/latest/bin:$PATH
+          export ANDROID_HOME=/usr/local/lib/android/sdk
+          export ANDROID_SDK_ROOT=/usr/local/lib/android/sdk
+          export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
           yes | sdkmanager --licenses || true
           sdkmanager "platforms;android-34" "build-tools;34.0.0"
           cd $GITHUB_WORKSPACE
-          rm -rf app build.gradle settings.gradle gradle gradlew*
+          rm -rf app build.gradle settings.gradle gradle gradlew* local.properties
           mkdir -p app/src/main/java/com/safeguard/onehub
           cat > settings.gradle << 'EOF'
           include ":app"
@@ -39,15 +29,19 @@ jobs:
                   mavenCentral()
               }
               dependencies {
-                  classpath "com.android.tools.build:gradle:8.1.0"
+                  classpath "com.android.tools.build:gradle:8.2.2"
+              }
+          }
+          allprojects {
+              repositories {
+                  google()
+                  mavenCentral()
               }
           }
           EOF
           cat > app/build.gradle << 'EOF'
-          apply plugin: "com.android.application"
-          repositories {
-              google()
-              mavenCentral()
+          plugins {
+              id 'com.android.application'
           }
           android {
               namespace "com.safeguard.onehub"
@@ -64,15 +58,14 @@ jobs:
           cat > app/src/main/AndroidManifest.xml << 'EOF'
           <manifest xmlns:android="http://schemas.android.com/apk/res/android"><uses-permission android:name="android.permission.INTERNET"/><application android:label="NDALA"><activity android:name=".MainActivity" android:exported="true"><intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter></activity></application></manifest>
           EOF
-           wget -q https://services.gradle.org/distributions/gradle-8.7-bin.zip
+          cat > app/src/main/java/com/safeguard/onehub/MainActivity.java << 'EOF'
+          package com.safeguard.onehub;import android.app.Activity;import android.os.Bundle;import android.webkit.*;public class MainActivity extends Activity{WebView w;protected void onCreate(Bundle b){super.onCreate(b);w=new WebView(this);setContentView(w);w.getSettings().setJavaScriptEnabled(true);w.setWebViewClient(new WebViewClient(){public boolean shouldOverrideUrlLoading(WebView v,WebResourceRequest r){String u=r.getUrl().toString().toLowerCase();if(u.contains("pornhub")||u.contains("xvideos")||u.contains("xnxx")){v.loadData("<h1>Blocked by NDALA</h1>","text/html","UTF-8");return true;}return false;}});w.loadUrl("https://www.google.com");}}
+          EOF
+          wget -q https://services.gradle.org/distributions/gradle-8.7-bin.zip
           unzip -q gradle-8.7-bin.zip
           ./gradle-8.7/bin/gradle wrapper --gradle-version 8.7
           chmod +x gradlew
           ./gradlew app:assembleDebug
-          cat > app/src/main/java/com/safeguard/onehub/MainActivity.java << 'EOF'
-          package com.safeguard.onehub;import android.app.Activity;import android.os.Bundle;import android.webkit.*;public class MainActivity extends Activity{WebView w;protected void onCreate(Bundle b){super.onCreate(b);w=new WebView(this);setContentView(w);w.getSettings().setJavaScriptEnabled(true);w.setWebViewClient(new WebViewClient(){public boolean shouldOverrideUrlLoading(WebView v,WebResourceRequest r){String u=r.getUrl().toString().toLowerCase();if(u.contains("pornhub")||u.contains("xvideos")||u.contains("xnxx")){v.loadData("<h1>Blocked by NDALA</h1>","text/html","UTF-8");return true;}return false;}});w.loadUrl("https://www.google.com");}}
-          EOF
-          
       - uses: actions/upload-artifact@v4
         with:
           name: NDALA-APK
