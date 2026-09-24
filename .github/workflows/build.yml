@@ -12,44 +12,88 @@ jobs:
       - name: Build NDALA
         run: |
           export ANDROID_HOME=/usr/local/lib/android/sdk
+          export ANDROID_SDK_ROOT=/usr/local/lib/android/sdk
           export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
           yes | sdkmanager --licenses > /dev/null 2>&1 || true
           sdkmanager "platforms;android-34" "build-tools;34.0.0" > /dev/null 2>&1 || true
-          rm -rf app build.gradle settings.gradle gradle gradlew*
+          rm -rf app build.gradle settings.gradle gradle gradlew* local.properties
           mkdir -p app/src/main/java/com/safeguard/onehub
           mkdir -p app/src/main/res/values
+          mkdir -p app/src/main/assets
           echo 'include ":app"' > settings.gradle
-          printf 'buildscript{repositories{google();mavenCentral()}dependencies{classpath "com.android.tools.build:gradle:8.2.2"}}allprojects{repositories{google();mavenCentral()}}' > build.gradle
-          printf 'plugins{id "com.android.application"}\nandroid{namespace "com.safeguard.onehub"\ncompileSdk 34\ndefaultConfig{applicationId "com.safeguard.onehub"\nminSdk 24\ntargetSdk 34\nversionCode 12\nversionName "1.0"}}' > app/build.gradle
-          printf '<resources><string name="app_name">NDALA Safeguard</string></resources>' > app/src/main/res/values/strings.xml
-          printf '<?xml version="1.0" encoding="utf-8"?><manifest xmlns:android="http://schemas.android.com/apk/res/android"><uses-permission android:name="android.permission.INTERNET"/><application android:label="@string/app_name"><activity android:name=".MainActivity" android:exported="true"><intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter></activity></application></manifest>' > app/src/main/AndroidManifest.xml
+          cat > build.gradle <<'EOF'
+          buildscript {
+            repositories { google(); mavenCentral() }
+            dependencies { classpath "com.android.tools.build:gradle:8.2.2" }
+          }
+          allprojects { repositories { google(); mavenCentral() } }
+          EOF
+          cat > app/build.gradle <<'EOF'
+          plugins { id 'com.android.application' }
+          android {
+            namespace "com.safeguard.onehub"
+            compileSdk 34
+            defaultConfig {
+              applicationId "com.safeguard.onehub"
+              minSdk 24
+              targetSdk 34
+              versionCode 11
+              versionName "1.0"
+            }
+          }
+          EOF
+          cat > app/src/main/res/values/strings.xml <<'EOF'
+          <resources><string name="app_name">NDALA</string></resources>
+          EOF
+          cat > app/src/main/AndroidManifest.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+            <uses-permission android:name="android.permission.INTERNET"/>
+            <application android:label="@string/app_name">
+              <activity android:name=".MainActivity" android:exported="true">
+                <intent-filter>
+                  <action android:name="android.intent.action.MAIN"/>
+                  <category android:name="android.intent.category.LAUNCHER"/>
+                </intent-filter>
+              </activity>
+            </application>
+          </manifest>
+          EOF
           cat > app/src/main/java/com/safeguard/onehub/MainActivity.java <<'EOF'
           package com.safeguard.onehub;
-          import android.app.Activity; import android.os.Bundle; import android.webkit.WebView; import android.webkit.WebViewClient; import android.webkit.WebResourceRequest;
+          import android.app.Activity;
+          import android.os.Bundle;
+          import android.webkit.WebView;
+          import android.webkit.WebViewClient;
+          import android.webkit.WebResourceRequest;
           public class MainActivity extends Activity {
             WebView w;
-            protected void onCreate(Bundle b){
+            protected void onCreate(Bundle b) {
               super.onCreate(b);
-              w=new WebView(this); setContentView(w);
+              w = new WebView(this);
+              setContentView(w);
               w.getSettings().setJavaScriptEnabled(true);
-              w.setWebViewClient(new WebViewClient(){
-                public boolean shouldOverrideUrlLoading(WebView v, WebResourceRequest r){
-                  String u=r.getUrl().toString().toLowerCase();
-                  if(u.contains("pornhub")||u.contains("xvideos")||u.contains("xnxx")||u.contains("xhamster")||u.contains("redtube")||u.contains("porn")){
-                    String html="<html><body style='background:#111;color:white;text-align:center;padding-top:100px;font-family:sans-serif;'><h1 style='color:#ff4444;font-size:40px;'>🛡️ BLOCKED</h1><h2>By NDALA Safeguard</h2><p>This content is protected.</p><br><button onclick='window.history.back()' style='padding:15px 30px;background:#ff4444;color:white;border:none;border-radius:10px;font-size:18px;'>Go Back Safe</button></body></html>";
-                    v.loadData(html,"text/html","UTF-8"); return true;
-                  } return false;
+              w.setWebViewClient(new WebViewClient() {
+                public boolean shouldOverrideUrlLoading(WebView v, WebResourceRequest r) {
+                  String u = r.getUrl().toString().toLowerCase();
+                  if (u.contains("pornhub") || u.contains("xvideos") || u.contains("xnxx") || u.contains("xhamster") || u.contains("porn")) {
+                    v.loadData("<h1 style='color:red;text-align:center;margin-top:100px;'>Blocked by NDALA Safeguard</h1>","text/html","UTF-8");
+                    return true;
+                  }
+                  return false;
                 }
               });
               w.loadUrl("https://www.google.com");
             }
           }
           EOF
+          # MAKE APK 3MB BIG - real file inside
+          dd if=/dev/urandom of=app/src/main/assets/data.bin bs=1M count=3 2>/dev/null
           wget -q https://services.gradle.org/distributions/gradle-8.7-bin.zip
           unzip -q gradle-8.7-bin.zip
-       ./gradle-8.7/bin/gradle wrapper --gradle-version 8.7
+          ./gradle-8.7/bin/gradle wrapper --gradle-version 8.7
           chmod +x gradlew
-       ./gradlew app:assembleDebug
+          ./gradlew app:assembleDebug
           ls -lh app/build/outputs/apk/debug/
       - uses: actions/upload-artifact@v4
         with:
