@@ -9,13 +9,20 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Setup Android
-        uses: android-actions/setup-android@v3
-      - name: Build NDALA Real APK
+
+      - name: Build NDALA
         run: |
-          rm -rf app build.gradle settings.gradle gradle gradlew*
+          export ANDROID_HOME=/usr/local/lib/android/sdk
+          export ANDROID_SDK_ROOT=/usr/local/lib/android/sdk
+          export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
+          yes | sdkmanager --licenses > /dev/null 2>&1 || true
+          sdkmanager "platforms;android-34" "build-tools;34.0.0" > /dev/null 2>&1 || true
+
+          rm -rf app build.gradle settings.gradle gradle gradlew* local.properties.gradle
           mkdir -p app/src/main/java/com/safeguard/onehub
+
           echo 'include ":app"' > settings.gradle
+
           cat > build.gradle <<'EOF'
           buildscript {
             repositories { google(); mavenCentral() }
@@ -23,6 +30,7 @@ jobs:
           }
           allprojects { repositories { google(); mavenCentral() } }
           EOF
+
           cat > app/build.gradle <<'EOF'
           plugins { id 'com.android.application' }
           android {
@@ -32,13 +40,12 @@ jobs:
               applicationId "com.safeguard.onehub"
               minSdk 24
               targetSdk 34
-              versionCode 6
+              versionCode 7
               versionName "1.0"
             }
-            buildTypes { debug { minifyEnabled false } }
           }
-          dependencies {}
           EOF
+
           cat > app/src/main/AndroidManifest.xml <<'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <manifest xmlns:android="http://schemas.android.com/apk/res/android">
@@ -53,23 +60,26 @@ jobs:
             </application>
           </manifest>
           EOF
+
           cat > app/src/main/java/com/safeguard/onehub/MainActivity.java <<'EOF'
           package com.safeguard.onehub;
           import android.app.Activity;
           import android.os.Bundle;
-          import android.webkit.*;
-          public class MainActivity extends Activity{
+          import android.webkit.WebView;
+          import android.webkit.WebViewClient;
+          import android.webkit.WebResourceRequest;
+          public class MainActivity extends Activity {
             WebView w;
-            protected void onCreate(Bundle b){
+            protected void onCreate(Bundle b) {
               super.onCreate(b);
-              w=new WebView(this);
+              w = new WebView(this);
               setContentView(w);
               w.getSettings().setJavaScriptEnabled(true);
-              w.setWebViewClient(new WebViewClient(){
-                public boolean shouldOverrideUrlLoading(WebView v,WebResourceRequest r){
-                  String url=r.getUrl().toString().toLowerCase();
-                  if(url.contains("pornhub")||url.contains("xvideos")||url.contains("xnxx")||url.contains("xhamster")){
-                    v.loadData("<html><body><h1>Blocked by NDALA</h1><p>This site is blocked.</p></body></html>","text/html","UTF-8");
+              w.setWebViewClient(new WebViewClient() {
+                public boolean shouldOverrideUrlLoading(WebView v, WebResourceRequest r) {
+                  String u = r.getUrl().toString().toLowerCase();
+                  if (u.contains("pornhub") || u.contains("xvideos") || u.contains("xnxx")) {
+                    v.loadData("<h1>Blocked by NDALA</h1>", "text/html", "UTF-8");
                     return true;
                   }
                   return false;
@@ -79,19 +89,17 @@ jobs:
             }
           }
           EOF
-          chmod +x gradlew 2>/dev/null || true
-          if [! -f gradlew ]; then
-            wget -q https://services.gradle.org/distributions/gradle-8.7-bin.zip
-            unzip -q gradle-8.7-bin.zip
-           ./gradle-8.7/bin/gradle wrapper --gradle-version 8.7
-            chmod +x gradlew
-          fi
-          ./gradlew app:assembleDebug --stacktrace
-          echo "=== APK SIZE ==="
-          ls -lh app/build/outputs/apk/debug/ -R
-      - name: Upload REAL APK
-        uses: actions/upload-artifact@v4
+
+          wget -q https://services.gradle.org/distributions/gradle-8.7-bin.zip
+          unzip -q gradle-8.7-bin.zip
+          ./gradle-8.7/bin/gradle wrapper --gradle-version 8.7
+          chmod +x gradlew
+          ./gradlew app:assembleDebug
+          ls -lh app/build/outputs/apk/debug/
+          du -h app/build/outputs/apk/debug/app-debug.apk
+
+      - uses: actions/upload-artifact@v4
         with:
-          name: NDALA-APK-REAL
+          name: NDALA-APK
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
