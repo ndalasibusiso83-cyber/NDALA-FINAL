@@ -9,7 +9,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Build NDALA Dashboard
+      - name: Build NDALA FINAL
         run: |
           export ANDROID_HOME=/usr/local/lib/android/sdk
           export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
@@ -17,188 +17,75 @@ jobs:
           sdkmanager "platforms;android-34" "build-tools;34.0.0" > /dev/null 2>&1 || true
           rm -rf app build.gradle settings.gradle gradle gradlew* local.properties
           mkdir -p app/src/main/java/com/safeguard/onehub
-          mkdir -p app/src/main/res/values
-          mkdir -p app/src/main/res/layout
-          mkdir -p app/src/main/res/mipmap-hdpi app/src/main/res/mipmap-mdpi app/src/main/res/mipmap-xhdpi app/src/main/res/mipmap-xxhdpi app/src/main/res/mipmap-xxxhdpi
-          mkdir -p app/src/main/res/drawable
-          mkdir -p app/src/main/assets
-
+          mkdir -p app/src/main/res/values app/src/main/res/layout app/src/main/res/drawable app/src/main/assets
           echo 'include ":app"' > settings.gradle
           echo 'buildscript{repositories{google();mavenCentral()}dependencies{classpath "com.android.tools.build:gradle:8.2.2"}}allprojects{repositories{google();mavenCentral()}}' > build.gradle
-          echo 'plugins{id "com.android.application"} android{namespace "com.safeguard.onehub" compileSdk 34 defaultConfig{applicationId "com.safeguard.onehub" minSdk 24 targetSdk 34 versionCode 13 versionName "2.0 Dashboard"} }' > app/build.gradle
-
-          # VALUES
+          echo 'plugins{id "com.android.application"} android{namespace "com.safeguard.onehub" compileSdk 34 defaultConfig{applicationId "com.safeguard.onehub" minSdk 24 targetSdk 34 versionCode 15 versionName "3.0 Founder"} }' > app/build.gradle
           cat > app/src/main/res/values/strings.xml <<'EOF'
           <resources><string name="app_name">SafeGuard One Hub</string></resources>
           EOF
-
-          # DRAWABLES - Rounded cards + search
           cat > app/src/main/res/drawable/card_bg.xml <<'EOF'
-          <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-            <solid android:color="#FFFFFF"/>
-            <corners android:radius="16dp"/>
-            <stroke android:width="1dp" android:color="#E0E0E0"/>
-          </shape>
+          <shape xmlns:android="http://schemas.android.com/apk/res/android"><solid android:color="#FFFFFF"/><corners android:radius="16dp"/><stroke android:width="1dp" android:color="#E0E0E0"/></shape>
           EOF
           cat > app/src/main/res/drawable/search_bg.xml <<'EOF'
-          <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-            <solid android:color="#F5F5F5"/>
-            <corners android:radius="30dp"/>
-            <stroke android:width="1dp" android:color="#D0D0D0"/>
-          </shape>
+          <shape xmlns:android="http://schemas.android.com/apk/res/android"><solid android:color="#F5F5F5"/><corners android:radius="30dp"/><stroke android:width="1dp" android:color="#D0D0D0"/></shape>
           EOF
           cat > app/src/main/res/drawable/green_btn.xml <<'EOF'
-          <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-            <solid android:color="#0B8C3E"/>
-            <corners android:radius="12dp"/>
-          </shape>
+          <shape xmlns:android="http://schemas.android.com/apk/res/android"><solid android:color="#0B8C3E"/><corners android:radius="12dp"/></shape>
           EOF
           cat > app/src/main/res/drawable/white_btn.xml <<'EOF'
-          <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-            <solid android:color="#FFFFFF"/>
-            <corners android:radius="12dp"/>
-            <stroke android:width="2dp" android:color="#0B8C3E"/>
-          </shape>
+          <shape xmlns:android="http://schemas.android.com/apk/res/android"><solid android:color="#FFFFFF"/><corners android:radius="12dp"/><stroke android:width="2dp" android:color="#0B8C3E"/></shape>
           EOF
           cat > app/src/main/res/drawable/family_bg.xml <<'EOF'
-          <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-            <solid android:color="#F8FFF8"/>
-            <corners android:radius="12dp"/>
-            <stroke android:width="2dp" android:color="#0B8C3E"/>
-          </shape>
+          <shape xmlns:android="http://schemas.android.com/apk/res/android"><solid android:color="#F8FFF8"/><corners android:radius="12dp"/><stroke android:width="2dp" android:color="#0B8C3E"/></shape>
           EOF
           cat > app/src/main/res/drawable/on_badge.xml <<'EOF'
-          <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-            <solid android:color="#0B8C3E"/>
-            <corners android:radius="20dp"/>
-          </shape>
+          <shape xmlns:android="http://schemas.android.com/apk/res/android"><solid android:color="#0B8C3E"/><corners android:radius="20dp"/></shape>
           EOF
-
-          # ICON
-          python3 <<'PY'
-          from PIL import Image, ImageDraw, ImageFont
-          def make_icon(s, path):
-              img = Image.new('RGBA', (s,s), (255,255,255,0))
-              d = ImageDraw.Draw(img)
-              # green shield
-              d.ellipse([s*0.2,s*0.05,s*0.8,s*0.75], fill=(11,140,62,255))
-              d.rectangle([s*0.2,s*0.35,s*0.8,s*0.55], fill=(11,140,62,255))
-              # inner white check area
-              d.ellipse([s*0.28,s*0.15,s*0.72,s*0.65], fill=(255,255,255,255))
-              try:
-                  f = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", int(s*0.3))
-              except:
-                  f = ImageFont.load_default()
-              d.text((s*0.32,s*0.22), "✓", fill=(11,140,62,255), font=f)
-              img.save(path)
-          for folder, size in [("mipmap-mdpi",48),("mipmap-hdpi",72),("mipmap-xhdpi",96),("mipmap-xxhdpi",144),("mipmap-xxxhdpi",192)]:
-              make_icon(size, f"app/src/main/res/{folder}/ic_launcher.png")
-              make_icon(size, f"app/src/main/res/{folder}/ic_launcher_round.png")
-          PY
-
-          # LAYOUT - Exact like screenshot
+          cat > app/src/main/res/drawable/creator_bg.xml <<'EOF'
+          <shape xmlns:android="http://schemas.android.com/apk/res/android"><solid android:color="#0B3D1F"/><corners android:radius="20dp"/></shape>
+          EOF
           cat > app/src/main/res/layout/activity_main.xml <<'EOF'
           <?xml version="1.0" encoding="utf-8"?>
-          <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent"
-              android:background="#FFFFFF" android:padding="16dp">
-
-              <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center" android:layout_marginTop="30dp" android:layout_marginBottom="10dp">
-                  <TextView android:layout_width="60dp" android:layout_height="60dp" android:text="🛡️" android:textSize="50dp" android:gravity="center"/>
-                  <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SafeGuard One Hub" android:textSize="26sp" android:textStyle="bold" android:textColor="#0B3D1F" android:layout_marginTop="8dp"/>
-                  <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Parental control &amp; safety dashboard" android:textSize="14sp" android:textColor="#666666" android:layout_marginTop="4dp"/>
-              </LinearLayout>
-
-              <LinearLayout android:id="@+id/searchBar" android:layout_width="match_parent" android:layout_height="50dp" android:background="@drawable/search_bg" android:orientation="horizontal" android:gravity="center_vertical" android:paddingHorizontal="16dp" android:layout_marginTop="20dp">
-                  <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🔍" android:textSize="18sp"/>
-                  <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=" Safe Google Search" android:textSize="16sp" android:textColor="#888888"/>
-              </LinearLayout>
-
-              <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@drawable/card_bg" android:orientation="horizontal" android:padding="16dp" android:layout_marginTop="20dp" android:gravity="center_vertical">
-                  <TextView android:layout_width="40dp" android:layout_height="40dp" android:text="🔒" android:textSize="28sp" android:gravity="center"/>
-                  <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginLeft="12dp">
-                      <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="VPN Shield" android:textSize="18sp" android:textStyle="bold" android:textColor="#222222"/>
-                      <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Secure connection active • Protected" android:textSize="12sp" android:textColor="#666666"/>
-                  </LinearLayout>
-                  <TextView android:layout_width="48dp" android:layout_height="28dp" android:text="ON" android:background="@drawable/on_badge" android:textColor="#FFFFFF" android:gravity="center" android:textStyle="bold" android:textSize="14sp"/>
-              </LinearLayout>
-
-              <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@drawable/card_bg" android:orientation="horizontal" android:padding="16dp" android:layout_marginTop="12dp" android:gravity="center_vertical">
-                  <TextView android:layout_width="40dp" android:layout_height="40dp" android:text="🔍" android:textSize="28sp" android:gravity="center"/>
-                  <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginLeft="12dp">
-                      <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Media Scanner" android:textSize="18sp" android:textStyle="bold" android:textColor="#222222"/>
-                      <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Scanning photos &amp; messages • Safe" android:textSize="12sp" android:textColor="#666666"/>
-                  </LinearLayout>
-                  <TextView android:layout_width="48dp" android:layout_height="28dp" android:text="ON" android:background="@drawable/on_badge" android:textColor="#FFFFFF" android:gravity="center" android:textStyle="bold" android:textSize="14sp"/>
-              </LinearLayout>
-
-              <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Family ID" android:textSize="18sp" android:textStyle="bold" android:textColor="#0B3D1F" android:layout_marginTop="24dp" android:layout_marginBottom="8dp"/>
-
-              <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@drawable/family_bg" android:orientation="horizontal" android:padding="16dp" android:gravity="center_vertical">
-                  <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                      <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="NDALA" android:textSize="22sp" android:textStyle="bold" android:textColor="#222222"/>
-                      <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Family ID • Share with family devices" android:textSize="12sp" android:textColor="#666666" android:layout_marginTop="2dp"/>
-                  </LinearLayout>
-                  <TextView android:layout_width="30dp" android:layout_height="30dp" android:text="📋" android:textSize="20sp" android:gravity="center"/>
-              </LinearLayout>
-
-              <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="20dp">
-                  <TextView android:id="@+id/btnTest" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:background="@drawable/white_btn" android:text="TEST BLOCK" android:textColor="#0B8C3E" android:gravity="center" android:textStyle="bold" android:layout_marginRight="8dp"/>
-                  <TextView android:id="@+id/btnParent" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:background="@drawable/green_btn" android:text="Parent Dashboard" android:textColor="#FFFFFF" android:gravity="center" android:textStyle="bold" android:layout_marginLeft="8dp"/>
-              </LinearLayout>
-
-              <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="All protections are active • Last updated now" android:textSize="11sp" android:textColor="#888888" android:gravity="center" android:layout_marginTop="20dp"/>
-
-          </LinearLayout>
+          <ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#FFFFFF">
+          <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="16dp">
+          <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center" android:layout_marginTop="20dp"><TextView android:layout_width="60dp" android:layout_height="60dp" android:text="🛡️" android:textSize="50dp" android:gravity="center"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SafeGuard One Hub" android:textSize="26sp" android:textStyle="bold" android:textColor="#0B3D1F" android:layout_marginTop="8dp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Parental control &amp; safety dashboard" android:textSize="14sp" android:textColor="#666666" android:layout_marginTop="4dp"/></LinearLayout>
+          <LinearLayout android:id="@+id/searchBar" android:layout_width="match_parent" android:layout_height="50dp" android:background="@drawable/search_bg" android:orientation="horizontal" android:gravity="center_vertical" android:paddingHorizontal="16dp" android:layout_marginTop="15dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🔍" android:textSize="18sp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=" Safe Google Search" android:textSize="16sp" android:textColor="#888888"/></LinearLayout>
+          <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@drawable/card_bg" android:orientation="horizontal" android:padding="16dp" android:layout_marginTop="15dp" android:gravity="center_vertical"><TextView android:layout_width="40dp" android:layout_height="40dp" android:text="🔒" android:textSize="28sp" android:gravity="center"/><LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginLeft="12dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="VPN Shield" android:textSize="18sp" android:textStyle="bold" android:textColor="#222222"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Secure connection active • Protected" android:textSize="12sp" android:textColor="#666666"/></LinearLayout><TextView android:layout_width="48dp" android:layout_height="28dp" android:text="ON" android:background="@drawable/on_badge" android:textColor="#FFFFFF" android:gravity="center" android:textStyle="bold" android:textSize="14sp"/></LinearLayout>
+          <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@drawable/card_bg" android:orientation="horizontal" android:padding="16dp" android:layout_marginTop="10dp" android:gravity="center_vertical"><TextView android:layout_width="40dp" android:layout_height="40dp" android:text="🔍" android:textSize="28sp" android:gravity="center"/><LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginLeft="12dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Media Scanner" android:textSize="18sp" android:textStyle="bold" android:textColor="#222222"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Scanning photos &amp; messages • Safe" android:textSize="12sp" android:textColor="#666666"/></LinearLayout><TextView android:layout_width="48dp" android:layout_height="28dp" android:text="ON" android:background="@drawable/on_badge" android:textColor="#FFFFFF" android:gravity="center" android:textStyle="bold" android:textSize="14sp"/></LinearLayout>
+          <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Family ID" android:textSize="18sp" android:textStyle="bold" android:textColor="#0B3D1F" android:layout_marginTop="18dp" android:layout_marginBottom="8dp"/>
+          <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@drawable/family_bg" android:orientation="horizontal" android:padding="16dp" android:gravity="center_vertical"><LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="NDALA" android:textSize="22sp" android:textStyle="bold" android:textColor="#222222"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Family ID • Share with family devices" android:textSize="12sp" android:textColor="#666666"/></LinearLayout><TextView android:layout_width="30dp" android:layout_height="30dp" android:text="📋" android:textSize="20sp" android:gravity="center"/></LinearLayout>
+          <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="15dp"><TextView android:id="@+id/btnTest" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:background="@drawable/white_btn" android:text="TEST BLOCK" android:textColor="#0B8C3E" android:gravity="center" android:textStyle="bold" android:layout_marginRight="8dp"/><TextView android:id="@+id/btnParent" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:background="@drawable/green_btn" android:text="Parent Dashboard" android:textColor="#FFFFFF" android:gravity="center" android:textStyle="bold" android:layout_marginLeft="8dp"/></LinearLayout>
+          <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@drawable/creator_bg" android:orientation="vertical" android:gravity="center" android:padding="16dp" android:layout_marginTop="20dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Created by" android:textSize="11sp" android:textColor="#A0D0B0" android:textStyle="bold"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Sibusiso D Ndala" android:textSize="20sp" android:textStyle="bold" android:textColor="#FFFFFF" android:layout_marginTop="2dp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Founder &amp; Developer • NDALA Safeguard" android:textSize="11sp" android:textColor="#C0E0C0" android:layout_marginTop="2dp"/></LinearLayout>
+          <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="All protections are active • Last updated now" android:textSize="11sp" android:textColor="#888888" android:gravity="center" android:layout_marginTop="12dp" android:layout_marginBottom="20dp"/>
+          </LinearLayout></ScrollView>
           EOF
-
           cat > app/src/main/AndroidManifest.xml <<'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <manifest xmlns:android="http://schemas.android.com/apk/res/android">
             <uses-permission android:name="android.permission.INTERNET"/>
-            <application android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round" android:label="SafeGuard One Hub">
-              <activity android:name=".MainActivity" android:exported="true">
-                <intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
-              </activity>
+            <application android:icon="@android:mipmap/sym_def_app_icon" android:label="SafeGuard One Hub">
+              <activity android:name=".MainActivity" android:exported="true"><intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter></activity>
               <activity android:name=".BrowserActivity" android:exported="false"/>
             </application>
           </manifest>
           EOF
-
           cat > app/src/main/java/com/safeguard/onehub/MainActivity.java <<'EOF'
           package com.safeguard.onehub;
           import android.app.Activity;
           import android.content.Intent;
           import android.os.Bundle;
-          import android.view.View;
           import android.widget.Toast;
           public class MainActivity extends Activity {
             protected void onCreate(Bundle b){
               super.onCreate(b);
               setContentView(R.layout.activity_main);
-              findViewById(R.id.searchBar).setOnClickListener(new View.OnClickListener(){
-                public void onClick(View v){
-                  Intent i = new Intent(MainActivity.this, BrowserActivity.class);
-                  i.putExtra("url", "https://www.google.com");
-                  startActivity(i);
-                }
-              });
-              findViewById(R.id.btnTest).setOnClickListener(new View.OnClickListener(){
-                public void onClick(View v){
-                  Intent i = new Intent(MainActivity.this, BrowserActivity.class);
-                  i.putExtra("url", "https://www.pornhub.com");
-                  startActivity(i);
-                }
-              });
-              findViewById(R.id.btnParent).setOnClickListener(new View.OnClickListener(){
-                public void onClick(View v){
-                  Toast.makeText(MainActivity.this, "Family ID: NDALA - All protections active! VPN ON, Scanner ON", Toast.LENGTH_LONG).show();
-                }
-              });
+              findViewById(R.id.searchBar).setOnClickListener(v->{ Intent i=new Intent(this, BrowserActivity.class); i.putExtra("url","https://www.google.com"); startActivity(i); });
+              findViewById(R.id.btnTest).setOnClickListener(v->{ Intent i=new Intent(this, BrowserActivity.class); i.putExtra("url","https://www.pornhub.com"); startActivity(i); });
+              findViewById(R.id.btnParent).setOnClickListener(v->{ Toast.makeText(this,"SafeGuard One Hub by Sibusiso D Ndala - Family ID NDALA - All ON",Toast.LENGTH_LONG).show(); });
             }
           }
           EOF
-
           cat > app/src/main/java/com/safeguard/onehub/BrowserActivity.java <<'EOF'
           package com.safeguard.onehub;
           import android.app.Activity;
@@ -210,29 +97,25 @@ jobs:
             WebView w;
             protected void onCreate(Bundle b){
               super.onCreate(b);
-              w = new WebView(this);
-              setContentView(w);
+              w=new WebView(this); setContentView(w);
               w.getSettings().setJavaScriptEnabled(true);
               w.getSettings().setDomStorageEnabled(true);
-              String startUrl = getIntent().getStringExtra("url");
-              if(startUrl==null) startUrl="https://www.google.com";
+              String url=getIntent().getStringExtra("url"); if(url==null) url="https://www.google.com";
               w.setWebViewClient(new WebViewClient(){
                 public boolean shouldOverrideUrlLoading(WebView v, WebResourceRequest r){
-                  String u = r.getUrl().toString().toLowerCase();
-                  if (u.contains("pornhub") || u.contains("xvideos") || u.contains("xnxx") || u.contains("xhamster") || u.contains("redtube") || u.contains("youporn") || u.contains("porn") || u.contains("xxx")){
-                    String html = "<html><head><meta name='viewport' content='width=device-width, initial-scale=1'></head><body style='background:#0f0f0f;color:white;text-align:center;padding:20px;font-family:sans-serif;'><div style='margin-top:60px;'><div style='font-size:70px;'>🛡️</div><h1 style='color:#ff3b3b;font-size:36px;margin:20px 0 10px 0;'>BLOCKED</h1><h2 style='color:white;font-size:22px;font-weight:300;'>by NDALA Safeguard</h2><p style='color:#aaa;font-size:16px;margin:30px 20px;'>This content is protected.<br>Family ID: NDALA</p><button onclick='window.history.back()' style='padding:16px 40px;background:#ff3b3b;color:white;border:none;border-radius:30px;font-size:18px;font-weight:bold;'>← Go Back Safe</button></div></body></html>";
-                    v.loadData(html, "text/html", "UTF-8");
-                    return true;
+                  String u=r.getUrl().toString().toLowerCase();
+                  if(u.contains("pornhub")||u.contains("xvideos")||u.contains("xnxx")||u.contains("xhamster")||u.contains("redtube")||u.contains("youporn")||u.contains("porn")||u.contains("xxx")){
+                    String html="<html><head><meta name='viewport' content='width=device-width, initial-scale=1'></head><body style='background:#0f0f0f;color:white;text-align:center;padding:20px;font-family:sans-serif;'><div style='margin-top:50px;'><div style='font-size:70px;'>🛡️</div><h1 style='color:#ff3b3b;font-size:36px;margin:15px 0;'>BLOCKED</h1><h2 style='color:white;font-size:20px;'>by NDALA Safeguard</h2><p style='color:#aaa;margin:20px;'>Protected by<br><b style='color:white;font-size:18px;'>Sibusiso D Ndala</b></p><p style='color:#666;font-size:12px;'>Family ID: NDALA</p><br><button onclick='window.history.back()' style='padding:14px 36px;background:#ff3b3b;color:white;border:none;border-radius:30px;font-size:16px;font-weight:bold;'>← Go Back Safe</button><br><br><br><p style='color:#333;font-size:10px;'>Created by Sibusiso D Ndala - Founder</p></div></body></html>";
+                    v.loadData(html,"text/html","UTF-8"); return true;
                   }
                   return false;
                 }
               });
-              w.loadUrl(startUrl);
+              w.loadUrl(url);
             }
             public void onBackPressed(){ if(w.canGoBack()) w.goBack(); else super.onBackPressed(); }
           }
           EOF
-
           dd if=/dev/urandom of=app/src/main/assets/data.bin bs=1M count=3 2>/dev/null
           wget -q https://services.gradle.org/distributions/gradle-8.7-bin.zip
           unzip -q gradle-8.7-bin.zip
@@ -242,5 +125,5 @@ jobs:
           ls -lh app/build/outputs/apk/debug/
       - uses: actions/upload-artifact@v4
         with:
-          name: NDALA-DASHBOARD-FINAL
+          name: NDALA-SIBUSISO-FOUNDER-FINAL
           path: app/build/outputs/apk/debug/app-debug.apk
