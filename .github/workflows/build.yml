@@ -10,7 +10,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Auto-Create Proper Gradle Files
+      - name: Create root files correctly
         run: |
           cat > settings.gradle <<'EOF'
           pluginManagement {
@@ -35,21 +35,17 @@ jobs:
               id 'com.android.application' version '8.2.2' apply false
               id 'org.jetbrains.kotlin.android' version '1.9.10' apply false
           }
+          task clean(type: Delete) {
+              delete rootProject.buildDir
+          }
           EOF
           echo "org.gradle.jvmargs=-Xmx2048m" > gradle.properties
           echo "android.useAndroidX=true" >> gradle.properties
-          mkdir -p gradle/wrapper
-          echo "distributionBase=GRADLE_USER_HOME" > gradle/wrapper/gradle-wrapper.properties
-          echo "distributionPath=wrapper/dists" >> gradle/wrapper/gradle-wrapper.properties
-          echo "distributionUrl=https\://services.gradle.org/distributions/gradle-8.5-bin.zip" >> gradle/wrapper/gradle-wrapper.properties
-          echo "zipStoreBase=GRADLE_USER_HOME" >> gradle/wrapper/gradle-wrapper.properties
-          echo "zipStorePath=wrapper/dists" >> gradle/wrapper/gradle-wrapper.properties
-          ls -la
-      - name: Build APK
+      - name: Build APK - APP MODULE
         uses: gradle/gradle-build-action@v2
         with:
           gradle-version: 8.5
-          arguments: assembleDebug --stacktrace
+          arguments: :app:assembleDebug --stacktrace
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
