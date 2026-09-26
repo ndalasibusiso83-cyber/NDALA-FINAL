@@ -1,4 +1,4 @@
-name: Build SafeGuard Full App
+name: Build SafeGuard FINAL Same Layout
 on: push
 jobs:
   build:
@@ -9,40 +9,19 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-
-      - name: BUILD FULL APP FIXED
+      - name: BUILD SAME LAYOUT v8.1
         run: |
           cat > settings.gradle <<'EOF'
-          pluginManagement {
-              repositories {
-                  google()
-                  mavenCentral()
-                  gradlePluginPortal()
-              }
-          }
-          dependencyResolutionManagement {
-              repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-              repositories {
-                  google()
-                  mavenCentral()
-              }
-          }
-          rootProject.name = "SAFEGUARD-FULL"
-          include ':app'
+          pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }
+          dependencyResolutionManagement { repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS); repositories { google(); mavenCentral() } }
+          rootProject.name = "SAFEGUARD-SAME-LAYOUT"; include ':app'
           EOF
-
           cat > build.gradle <<'EOF'
-          plugins {
-              id 'com.android.application' version '8.2.2' apply false
-          }
+          plugins { id 'com.android.application' version '8.2.2' apply false }
           EOF
-
           printf "org.gradle.jvmargs=-Xmx2048m\nandroid.useAndroidX=true\n" > gradle.properties
-
           cat > app/build.gradle <<'EOF'
-          plugins {
-              id 'com.android.application'
-          }
+          plugins { id 'com.android.application' }
           android {
               namespace 'com.safeguard.onehub'
               compileSdk 34
@@ -50,90 +29,82 @@ jobs:
                   applicationId "com.safeguard.onehub"
                   minSdk 24
                   targetSdk 34
-                  versionCode 7
-                  versionName "7.0-FULL-FIXED"
+                  versionCode 81
+                  versionName "8.1-SAME-LAYOUT-FINAL"
               }
-              buildTypes {
-                  release {
-                      minifyEnabled false
-                  }
-              }
+              buildTypes { release { minifyEnabled false } }
           }
-          dependencies {
-              implementation 'androidx.appcompat:appcompat:1.6.1'
-          }
+          dependencies { implementation 'androidx.appcompat:appcompat:1.6.1' }
           EOF
-
           rm -rf app/src/main/res app/src/main/java/com
           mkdir -p app/src/main/res/layout app/src/main/res/values app/src/main/res/drawable app/src/main/java/com/safeguard/onehub
 
-          cat > app/src/main/res/values/colors.xml <<'EOF'
-          <?xml version="1.0" encoding="utf-8"?><resources><color name="dark_green">#0F3D2E</color><color name="card_green">#1A4D3A</color><color name="light_green">#1E8C4A</color><color name="gold">#FFC107</color><color name="white">#FFFFFF</color></resources>
-          EOF
           cat > app/src/main/res/values/strings.xml <<'EOF'
-          <?xml version="1.0" encoding="utf-8"?><resources><string name="app_name">SafeGuard One Hub</string></resources>
+          <resources><string name="app_name">SafeGuard One Hub</string></resources>
           EOF
           cat > app/src/main/res/drawable/bg_input.xml <<'EOF'
-          <?xml version="1.0" encoding="utf-8"?><shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle"><solid android:color="#FFFFFF"/><corners android:radius="16dp"/></shape>
+          <shape android:shape="rectangle"><solid android:color="#FFFFFF"/><corners android:radius="16dp"/></shape>
           EOF
-          cat > app/src/main/res/drawable/btn_unlock.xml <<'EOF'
-          <?xml version="1.0" encoding="utf-8"?><shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle"><solid android:color="#1E8C4A"/><corners android:radius="16dp"/></shape>
+          cat > app/src/main/res/drawable/btn_green.xml <<'EOF'
+          <shape android:shape="rectangle"><solid android:color="#1E8C4A"/><corners android:radius="16dp"/></shape>
           EOF
-          cat > app/src/main/res/drawable/btn_cancel.xml <<'EOF'
-          <?xml version="1.0" encoding="utf-8"?><shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle"><solid android:color="#0F3D2E"/><corners android:radius="16dp"/><stroke android:width="2dp" android:color="#FFFFFF"/></shape>
+          cat > app/src/main/res/drawable/btn_border.xml <<'EOF'
+          <shape android:shape="rectangle"><solid android:color="#0F3D2E"/><corners android:radius="16dp"/><stroke android:width="2dp" android:color="#FFFFFF"/></shape>
           EOF
           cat > app/src/main/res/drawable/card_bg.xml <<'EOF'
-          <?xml version="1.0" encoding="utf-8"?><shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle"><solid android:color="#1A4D3A"/><corners android:radius="16dp"/><stroke android:width="1dp" android:color="#2A6B4F"/></shape>
+          <shape android:shape="rectangle"><solid android:color="#1A4D3A"/><corners android:radius="16dp"/><stroke android:width="1dp" android:color="#2A6B4F"/></shape>
           EOF
           cat > app/src/main/res/drawable/dot_empty.xml <<'EOF'
-          <?xml version="1.0" encoding="utf-8"?><shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval"><solid android:color="#0F3D2E"/><stroke android:width="2dp" android:color="#2A6B4F"/><size android:width="16dp" android:height="16dp"/></shape>
+          <shape android:shape="oval"><solid android:color="#0F3D2E"/><stroke android:width="2dp" android:color="#2A6B4F"/><size android:width="16dp" android:height="16dp"/></shape>
           EOF
           cat > app/src/main/res/drawable/dot_filled.xml <<'EOF'
-          <?xml version="1.0" encoding="utf-8"?><shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval"><solid android:color="#FFC107"/><size android:width="16dp" android:height="16dp"/></shape>
+          <shape android:shape="oval"><solid android:color="#FFC107"/><size android:width="16dp" android:height="16dp"/></shape>
           EOF
 
           cat > app/src/main/res/layout/activity_main.xml <<'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#0F3D2E" android:orientation="vertical" android:padding="24dp" android:gravity="center_horizontal">
-              <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="SafeGuard One Hub" android:textColor="#FFFFFF" android:textSize="20sp" android:textStyle="bold" android:layout_marginTop="30dp" android:layout_marginBottom="40dp"/>
-              <TextView android:layout_width="80dp" android:layout_height="80dp" android:text="🔒" android:textSize="40sp" android:gravity="center" android:background="@drawable/card_bg" android:layout_marginBottom="20dp"/>
-              <TextView android:id="@+id/titleText" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Parent PIN Required" android:textColor="#FFFFFF" android:textSize="26sp" android:textStyle="bold"/>
-              <TextView android:id="@+id/subtitleText" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Kids cannot access dashboard" android:textColor="#A8D5BA" android:textSize="13sp" android:layout_marginTop="8dp" android:layout_marginBottom="24dp"/>
-              <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="16dp">
-                  <View android:id="@+id/dot1" android:layout_width="16dp" android:layout_height="16dp" android:background="@drawable/dot_empty" android:layout_margin="8dp"/><View android:id="@+id/dot2" android:layout_width="16dp" android:layout_height="16dp" android:background="@drawable/dot_empty" android:layout_margin="8dp"/><View android:id="@+id/dot3" android:layout_width="16dp" android:layout_height="16dp" android:background="@drawable/dot_empty" android:layout_margin="8dp"/><View android:id="@+id/dot4" android:layout_width="16dp" android:layout_height="16dp" android:background="@drawable/dot_empty" android:layout_margin="8dp"/>
-              </LinearLayout>
-              <TextView android:id="@+id/hintText" android:layout_width="match_parent" android:layout_height="56dp" android:background="@drawable/bg_input" android:text="Enter PIN ••••" android:textColor="#666666" android:gravity="center" android:textSize="16sp" android:layout_marginBottom="16dp"/>
-              <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center">
-                  <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal"><Button android:id="@+id/btn1" android:layout_width="70dp" android:layout_height="70dp" android:layout_margin="5dp" android:text="1" android:textColor="#FFFFFF" android:background="@drawable/btn_cancel"/><Button android:id="@+id/btn2" android:layout_width="70dp" android:layout_height="70dp" android:layout_margin="5dp" android:text="2" android:textColor="#FFFFFF" android:background="@drawable/btn_cancel"/><Button android:id="@+id/btn3" android:layout_width="70dp" android:layout_height="70dp" android:layout_margin="5dp" android:text="3" android:textColor="#FFFFFF" android:background="@drawable/btn_cancel"/></LinearLayout>
-                  <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal"><Button android:id="@+id/btn4" android:layout_width="70dp" android:layout_height="70dp" android:layout_margin="5dp" android:text="4" android:textColor="#FFFFFF" android:background="@drawable/btn_cancel"/><Button android:id="@+id/btn5" android:layout_width="70dp" android:layout_height="70dp" android:layout_margin="5dp" android:text="5" android:textColor="#FFFFFF" android:background="@drawable/btn_cancel"/><Button android:id="@+id/btn6" android:layout_width="70dp" android:layout_height="70dp" android:layout_margin="5dp" android:text="6" android:textColor="#FFFFFF" android:background="@drawable/btn_cancel"/></LinearLayout>
-                  <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal"><Button android:id="@+id/btn7" android:layout_width="70dp" android:layout_height="70dp" android:layout_margin="5dp" android:text="7" android:textColor="#FFFFFF" android:background="@drawable/btn_cancel"/><Button android:id="@+id/btn8" android:layout_width="70dp" android:layout_height="70dp" android:layout_margin="5dp" android:text="8" android:textColor="#FFFFFF" android:background="@drawable/btn_cancel"/><Button android:id="@+id/btn9" android:layout_width="70dp" android:layout_height="70dp" android:layout_margin="5dp" android:text="9" android:textColor="#FFFFFF" android:background="@drawable/btn_cancel"/></LinearLayout>
-                  <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal"><View android:layout_width="70dp" android:layout_height="70dp" android:layout_margin="5dp"/><Button android:id="@+id/btn0" android:layout_width="70dp" android:layout_height="70dp" android:layout_margin="5dp" android:text="0" android:textColor="#FFFFFF" android:background="@drawable/btn_cancel"/><Button android:id="@+id/btnDel" android:layout_width="70dp" android:layout_height="70dp" android:layout_margin="5dp" android:text="⌫" android:textColor="#FFFFFF" android:background="@drawable/btn_cancel"/></LinearLayout>
-              </LinearLayout>
-              <Button android:id="@+id/btnUnlock" android:layout_width="match_parent" android:layout_height="50dp" android:layout_marginTop="16dp" android:background="@drawable/btn_unlock" android:text="Unlock Dashboard" android:textColor="#FFFFFF" android:textStyle="bold"/>
-              <Button android:id="@+id/btnCancel" android:layout_width="match_parent" android:layout_height="50dp" android:layout_marginTop="8dp" android:background="@drawable/btn_cancel" android:text="Cancel" android:textColor="#FFFFFF"/>
+              <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="SafeGuard One Hub" android:textColor="#FFFFFF" android:textSize="20sp" android:textStyle="bold" android:layout_marginTop="30dp" android:layout_marginBottom="30dp"/>
+              <TextView android:layout_width="80dp" android:layout_height="80dp" android:text="🔒" android:textSize="36sp" android:gravity="center" android:background="@drawable/card_bg" android:layout_marginBottom="16dp"/>
+              <TextView android:id="@+id/titleText" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Parent PIN Required" android:textColor="#FFFFFF" android:textSize="24sp" android:textStyle="bold"/>
+              <TextView android:id="@+id/subtitleText" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Kids cannot access dashboard" android:textColor="#A8D5BA" android:textSize="12sp" android:layout_marginTop="6dp" android:layout_marginBottom="20dp"/>
+              <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="12dp"><View android:id="@+id/dot1" android:layout_width="14dp" android:layout_height="14dp" android:background="@drawable/dot_empty" android:layout_margin="8dp"/><View android:id="@+id/dot2" android:layout_width="14dp" android:layout_height="14dp" android:background="@drawable/dot_empty" android:layout_margin="8dp"/><View android:id="@+id/dot3" android:layout_width="14dp" android:layout_height="14dp" android:background="@drawable/dot_empty" android:layout_margin="8dp"/><View android:id="@+id/dot4" android:layout_width="14dp" android:layout_height="14dp" android:background="@drawable/dot_empty" android:layout_margin="8dp"/></LinearLayout>
+              <TextView android:id="@+id/hintText" android:layout_width="match_parent" android:layout_height="52dp" android:background="@drawable/bg_input" android:text="Enter PIN ••••" android:textColor="#666666" android:gravity="center" android:textSize="15sp" android:layout_marginBottom="12dp"/>
+              <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center"><LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal"><Button android:id="@+id/btn1" android:layout_width="70dp" android:layout_height="70dp" android:layout_margin="4dp" android:text="1" android:textColor="#FFF" android:background="@drawable/btn_border"/><Button android:id="@+id/btn2" android:layout_width="70dp" android:layout_height="70dp" android:layout_margin="4dp" android:text="2" android:textColor="#FFF" android:background="@drawable/btn_border"/><Button android:id="@+id/btn3" android:layout_width="70dp" android:layout_height="70dp" android:layout_margin="4dp" android:text="3" android:textColor="#FFF" android:background="@drawable/btn_border"/></LinearLayout><LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal"><Button android:id="@+id/btn4" android:layout_width="70dp" android:layout_height="70dp" android:layout_margin="4dp" android:text="4" android:textColor="#FFF" android:background="@drawable/btn_border"/><Button android:id="@+id/btn5" android:layout_width="70dp" android:layout_height="70dp" android:layout_margin="4dp" android:text="5" android:textColor="#FFF" android:background="@drawable/btn_border"/><Button android:id="@+id/btn6" android:layout_width="70dp" android:layout_height="70dp" android:layout_margin="4dp" android:text="6" android:textColor="#FFF" android:background="@drawable/btn_border"/></LinearLayout><LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal"><Button android:id="@+id/btn7" android:layout_width="70dp" android:layout_height="70dp" android:layout_margin="4dp" android:text="7" android:textColor="#FFF" android:background="@drawable/btn_border"/><Button android:id="@+id/btn8" android:layout_width="70dp" android:layout_height="70dp" android:layout_margin="4dp" android:text="8" android:textColor="#FFF" android:background="@drawable/btn_border"/><Button android:id="@+id/btn9" android:layout_width="70dp" android:layout_height="70dp" android:layout_margin="4dp" android:text="9" android:textColor="#FFF" android:background="@drawable/btn_border"/></LinearLayout><LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal"><View android:layout_width="70dp" android:layout_height="70dp" android:layout_margin="4dp"/><Button android:id="@+id/btn0" android:layout_width="70dp" android:layout_height="70dp" android:layout_margin="4dp" android:text="0" android:textColor="#FFF" android:background="@drawable/btn_border"/><Button android:id="@+id/btnDel" android:layout_width="70dp" android:layout_height="70dp" android:layout_margin="4dp" android:text="⌫" android:textColor="#FFF" android:background="@drawable/btn_border"/></LinearLayout></LinearLayout>
+              <Button android:id="@+id/btnUnlock" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="12dp" android:background="@drawable/btn_green" android:text="Unlock Dashboard" android:textColor="#FFFFFF" android:textStyle="bold"/>
+              <Button android:id="@+id/btnCancel" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="6dp" android:background="@drawable/btn_border" android:text="Cancel" android:textColor="#FFFFFF"/>
           </LinearLayout>
           EOF
 
           cat > app/src/main/res/layout/activity_dashboard.xml <<'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#0F3D2E">
-          <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
-              <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SafeGuard One Hub" android:textColor="#FFFFFF" android:textSize="22sp" android:textStyle="bold" android:layout_marginTop="20dp"/>
-              <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Parent Dashboard • SECURED" android:textColor="#4CAF50" android:textSize="12sp" android:layout_marginBottom="20dp"/>
-              <LinearLayout android:layout_width="match_parent" android:layout_height="80dp" android:background="@drawable/card_bg" android:orientation="horizontal" android:gravity="center_vertical" android:padding="16dp" android:layout_marginBottom="12dp">
-                  <TextView android:layout_width="50dp" android:layout_height="50dp" android:text="👨‍👩‍👧" android:textSize="28sp" android:gravity="center" android:background="@drawable/btn_cancel"/><LinearLayout android:layout_width="0dp" android:layout_weight="1" android:orientation="vertical" android:layout_marginLeft="12dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Kids Profiles" android:textColor="#FFFFFF" android:textSize="16sp" android:textStyle="bold"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="2 kids protected" android:textColor="#A8D5BA" android:textSize="11sp"/></LinearLayout><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textColor="#FFFFFF" android:textSize="24sp"/>
+          <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+              <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SafeGuard One Hub" android:textColor="#FFF" android:textSize="22sp" android:textStyle="bold" android:layout_marginTop="20dp"/>
+              <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Parent Dashboard • SECURED ✓" android:textColor="#4CAF50" android:textSize="11sp" android:layout_marginBottom="16dp"/>
+              <LinearLayout android:id="@+id/cardKids" android:layout_width="match_parent" android:layout_height="75dp" android:background="@drawable/card_bg" android:orientation="horizontal" android:gravity="center_vertical" android:padding="14dp" android:layout_marginBottom="10dp"><TextView android:layout_width="45dp" android:layout_height="45dp" android:text="👨‍👩‍👧" android:textSize="24sp" android:gravity="center" android:background="@drawable/btn_border"/><LinearLayout android:layout_width="0dp" android:layout_weight="1" android:orientation="vertical" android:layout_marginLeft="12dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Kids Profiles" android:textColor="#FFF" android:textSize="15sp" android:textStyle="bold"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Thabo (9) • Amahle (12) — 2 protected" android:textColor="#A8D5BA" android:textSize="10sp"/></LinearLayout><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textColor="#FFF" android:textSize="22sp"/></LinearLayout>
+              <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+                  <LinearLayout android:id="@+id/cardScreenTime" android:layout_width="0dp" android:layout_weight="1" android:layout_height="95dp" android:background="@drawable/card_bg" android:gravity="center" android:orientation="vertical" android:layout_marginRight="5dp" android:layout_marginBottom="10dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="⏱️" android:textSize="26sp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Screen Time" android:textColor="#FFF" android:textSize="12sp" android:textStyle="bold"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="3h 24m today" android:textColor="#A8D5BA" android:textSize="9sp"/></LinearLayout>
+                  <LinearLayout android:id="@+id/cardFilter" android:layout_width="0dp" android:layout_weight="1" android:layout_height="95dp" android:background="@drawable/card_bg" android:gravity="center" android:orientation="vertical" android:layout_marginLeft="5dp" android:layout_marginBottom="10dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🛡️" android:textSize="26sp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Content Filter" android:textColor="#FFF" android:textSize="12sp" android:textStyle="bold"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Active • Safe" android:textColor="#4CAF50" android:textSize="9sp"/></LinearLayout>
               </LinearLayout>
               <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
-                  <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="100dp" android:background="@drawable/card_bg" android:gravity="center" android:orientation="vertical" android:layout_marginRight="6dp" android:layout_marginBottom="12dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="⏱️" android:textSize="28sp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Screen Time" android:textColor="#FFFFFF" android:textSize="13sp" android:textStyle="bold"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="3h 24m today" android:textColor="#A8D5BA" android:textSize="10sp"/></LinearLayout>
-                  <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="100dp" android:background="@drawable/card_bg" android:gravity="center" android:orientation="vertical" android:layout_marginLeft="6dp" android:layout_marginBottom="12dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🛡️" android:textSize="28sp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Content Filter" android:textColor="#FFFFFF" android:textSize="13sp" android:textStyle="bold"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Active • Safe" android:textColor="#4CAF50" android:textSize="10sp"/></LinearLayout>
+                  <LinearLayout android:id="@+id/cardLocation" android:layout_width="0dp" android:layout_weight="1" android:layout_height="95dp" android:background="@drawable/card_bg" android:gravity="center" android:orientation="vertical" android:layout_marginRight="5dp" android:layout_marginBottom="10dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="📍" android:textSize="26sp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Location" android:textColor="#FFF" android:textSize="12sp" android:textStyle="bold"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Home • Safe" android:textColor="#A8D5BA" android:textSize="9sp"/></LinearLayout>
+                  <LinearLayout android:id="@+id/cardReports" android:layout_width="0dp" android:layout_weight="1" android:layout_height="95dp" android:background="@drawable/card_bg" android:gravity="center" android:orientation="vertical" android:layout_marginLeft="5dp" android:layout_marginBottom="10dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="📊" android:textSize="26sp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Reports" android:textColor="#FFF" android:textSize="12sp" android:textStyle="bold"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Weekly" android:textColor="#A8D5BA" android:textSize="9sp"/></LinearLayout>
               </LinearLayout>
-              <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
-                  <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="100dp" android:background="@drawable/card_bg" android:gravity="center" android:orientation="vertical" android:layout_marginRight="6dp" android:layout_marginBottom="12dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="📍" android:textSize="28sp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Location" android:textColor="#FFFFFF" android:textSize="13sp" android:textStyle="bold"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Home • Safe" android:textColor="#A8D5BA" android:textSize="10sp"/></LinearLayout>
-                  <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="100dp" android:background="@drawable/card_bg" android:gravity="center" android:orientation="vertical" android:layout_marginLeft="6dp" android:layout_marginBottom="12dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="📊" android:textSize="28sp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Reports" android:textColor="#FFFFFF" android:textSize="13sp" android:textStyle="bold"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Weekly" android:textColor="#A8D5BA" android:textSize="10sp"/></LinearLayout>
-              </LinearLayout>
-              <Button android:id="@+id/btnChangePin" android:layout_width="match_parent" android:layout_height="50dp" android:text="Change PIN" android:background="@drawable/btn_unlock" android:textColor="#FFFFFF" android:layout_marginTop="20dp"/><Button android:id="@+id/btnLock" android:layout_width="match_parent" android:layout_height="50dp" android:text="Lock Dashboard" android:background="@drawable/btn_cancel" android:textColor="#FFFFFF" android:layout_marginTop="8dp"/>
+              <LinearLayout android:id="@+id/cardControls" android:layout_width="match_parent" android:layout_height="65dp" android:background="@drawable/card_bg" android:orientation="horizontal" android:gravity="center_vertical" android:padding="14dp" android:layout_marginBottom="10dp"><TextView android:layout_width="38dp" android:layout_height="38dp" android:text="⚙️" android:textSize="20sp" android:gravity="center" android:background="@drawable/btn_border"/><TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text=" App Controls &amp; Limits" android:textColor="#FFF" android:textSize="13sp" android:layout_marginLeft="8dp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textColor="#FFF" android:textSize="20sp"/></LinearLayout>
+              <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="12dp"><Button android:id="@+id/btnChangePin" android:layout_width="0dp" android:layout_weight="1" android:layout_height="48dp" android:text="Change PIN" android:background="@drawable/btn_green" android:textColor="#FFF" android:layout_marginRight="5dp"/><Button android:id="@+id/btnLock" android:layout_width="0dp" android:layout_weight="1" android:layout_height="48dp" android:text="Lock" android:background="@drawable/btn_border" android:textColor="#FFF" android:layout_marginLeft="5dp"/></LinearLayout>
           </LinearLayout>
           </ScrollView>
+          EOF
+
+          cat > app/src/main/res/layout/activity_simple.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#0F3D2E" android:orientation="vertical" android:padding="20dp">
+              <TextView android:id="@+id/headerTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Screen" android:textColor="#FFF" android:textSize="22sp" android:textStyle="bold" android:layout_marginTop="20dp"/>
+              <TextView android:id="@+id/headerSub" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Details" android:textColor="#A8D5BA" android:textSize="12sp" android:layout_marginBottom="20dp"/>
+              <LinearLayout android:id="@+id/contentBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@drawable/card_bg" android:orientation="vertical" android:padding="16dp" android:layout_marginBottom="12dp"/>
+              <Button android:id="@+id/btnBack" android:layout_width="match_parent" android:layout_height="50dp" android:text="‹ Back to Dashboard" android:background="@drawable/btn_border" android:textColor="#FFF" android:layout_marginTop="20dp"/>
+          </LinearLayout>
           EOF
 
           cat > app/src/main/AndroidManifest.xml <<'EOF'
@@ -142,38 +113,71 @@ jobs:
               <application android:label="SafeGuard One Hub" android:theme="@android:style/Theme.Black.NoTitleBar">
                   <activity android:name=".MainActivity" android:exported="true"><intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter></activity>
                   <activity android:name=".DashboardActivity" android:exported="false"/>
+                  <activity android:name=".KidsActivity" android:exported="false"/>
+                  <activity android:name=".ScreenTimeActivity" android:exported="false"/>
+                  <activity android:name=".FilterActivity" android:exported="false"/>
+                  <activity android:name=".LocationActivity" android:exported="false"/>
+                  <activity android:name=".ReportsActivity" android:exported="false"/>
+                  <activity android:name=".ControlsActivity" android:exported="false"/>
               </application>
           </manifest>
           EOF
 
           cat > app/src/main/java/com/safeguard/onehub/MainActivity.java <<'EOF'
           package com.safeguard.onehub;
-          import android.app.Activity; import android.content.Intent; import android.content.SharedPreferences; import android.os.Bundle; import android.view.View; import android.widget.Button; import android.widget.TextView; import android.widget.Toast;
+          import android.app.Activity; import android.content.Intent; import android.content.SharedPreferences; import android.os.Bundle; import android.view.View; import android.widget.Button; import android.widget.TextView;
           public class MainActivity extends Activity {
-              private StringBuilder pin = new StringBuilder(), firstPin = new StringBuilder(); private View dot1,dot2,dot3,dot4; private TextView title, subtitle, hint; private boolean isCreating=false,isConfirming=false; private SharedPreferences prefs;
-              protected void onCreate(Bundle b){ super.onCreate(b); setContentView(R.layout.activity_main); prefs=getSharedPreferences("safeguard_secure",MODE_PRIVATE); dot1=findViewById(R.id.dot1); dot2=findViewById(R.id.dot2); dot3=findViewById(R.id.dot3); dot4=findViewById(R.id.dot4); title=findViewById(R.id.titleText); subtitle=findViewById(R.id.subtitleText); hint=findViewById(R.id.hintText); String saved=prefs.getString("parent_pin",null); if(saved==null){ isCreating=true; title.setText("Create Parent PIN"); subtitle.setText("Set a secret PIN only parents know"); hint.setText("Create PIN ••••"); } else { title.setText("Parent PIN Required"); subtitle.setText("Kids cannot access dashboard"); hint.setText("Enter PIN ••••"); } int[] ids={R.id.btn0,R.id.btn1,R.id.btn2,R.id.btn3,R.id.btn4,R.id.btn5,R.id.btn6,R.id.btn7,R.id.btn8,R.id.btn9}; for(int id:ids){ findViewById(id).setOnClickListener(v->{ if(pin.length()<4){ pin.append(((Button)v).getText().toString()); updateDots(); if(pin.length()==4) handle(); } }); } findViewById(R.id.btnDel).setOnClickListener(v->{ if(pin.length()>0){ pin.deleteCharAt(pin.length()-1); updateDots(); } }); findViewById(R.id.btnUnlock).setOnClickListener(v->{ if(pin.length()==4) handle(); else Toast.makeText(this,"Enter 4 digits",Toast.LENGTH_SHORT).show(); }); findViewById(R.id.btnCancel).setOnClickListener(v->finish()); }
-              private void updateDots(){ View[] dots={dot1,dot2,dot3,dot4}; for(int i=0;i<4;i++) dots[i].setBackgroundResource(i<pin.length()?R.drawable.dot_filled:R.drawable.dot_empty); if(pin.length()==0) hint.setText(isCreating?"Create PIN ••••":"Enter PIN ••••"); else { StringBuilder sb=new StringBuilder(); for(int i=0;i<pin.length();i++) sb.append("•"); for(int i=pin.length();i<4;i++) sb.append("○"); hint.setText("PIN: "+sb.toString()); } }
-              private void handle(){ String saved=prefs.getString("parent_pin",null); if(isCreating&&!isConfirming){ firstPin=new StringBuilder(pin.toString()); pin.setLength(0); updateDots(); isConfirming=true; title.setText("Confirm Your PIN"); subtitle.setText("Enter same PIN again"); hint.setText("Confirm PIN ••••"); } else if(isCreating&&isConfirming){ if(pin.toString().equals(firstPin.toString())){ prefs.edit().putString("parent_pin",pin.toString()).apply(); startActivity(new Intent(this,DashboardActivity.class)); finish(); } else { pin.setLength(0); firstPin.setLength(0); isConfirming=false; title.setText("Create Parent PIN"); subtitle.setText("Set a secret PIN only parents know"); updateDots(); } } else { if(pin.toString().equals(saved)){ startActivity(new Intent(this,DashboardActivity.class)); finish(); } else { pin.setLength(0); updateDots(); } } }
+              StringBuilder pin=new StringBuilder(), first=new StringBuilder(); View d1,d2,d3,d4; TextView title, sub, hint; boolean isCreating=false, isConfirming=false; SharedPreferences prefs;
+              protected void onCreate(Bundle b){ super.onCreate(b); setContentView(R.layout.activity_main); prefs=getSharedPreferences("safeguard_secure",MODE_PRIVATE); d1=findViewById(R.id.dot1); d2=findViewById(R.id.dot2); d3=findViewById(R.id.dot3); d4=findViewById(R.id.dot4); title=findViewById(R.id.titleText); sub=findViewById(R.id.subtitleText); hint=findViewById(R.id.hintText); String saved=prefs.getString("parent_pin",null); if(saved==null){ isCreating=true; title.setText("Create Parent PIN"); sub.setText("Set a secret PIN only parents know"); hint.setText("Create PIN ••••"); } else { title.setText("Parent PIN Required"); sub.setText("Kids cannot access dashboard"); hint.setText("Enter PIN ••••"); } int[] ids={R.id.btn0,R.id.btn1,R.id.btn2,R.id.btn3,R.id.btn4,R.id.btn5,R.id.btn6,R.id.btn7,R.id.btn8,R.id.btn9}; for(int id:ids){ findViewById(id).setOnClickListener(v->{ if(pin.length()<4){ pin.append(((Button)v).getText().toString()); upd(); if(pin.length()==4) go(); } }); } findViewById(R.id.btnDel).setOnClickListener(v->{ if(pin.length()>0){ pin.deleteCharAt(pin.length()-1); upd(); } }); findViewById(R.id.btnUnlock).setOnClickListener(v->{ if(pin.length()==4) go(); }); findViewById(R.id.btnCancel).setOnClickListener(v->finish()); }
+              void upd(){ View[] ds={d1,d2,d3,d4}; for(int i=0;i<4;i++) ds[i].setBackgroundResource(i<pin.length()?R.drawable.dot_filled:R.drawable.dot_empty); if(pin.length()==0) hint.setText(isCreating?(isConfirming?"Confirm PIN ••••":"Create PIN ••••"):"Enter PIN ••••"); else { StringBuilder sb=new StringBuilder("PIN: "); for(int i=0;i<pin.length();i++) sb.append("•"); for(int i=pin.length();i<4;i++) sb.append("○"); hint.setText(sb.toString()); } }
+              void go(){ String saved=prefs.getString("parent_pin",null); if(isCreating&&!isConfirming){ first=new StringBuilder(pin.toString()); pin.setLength(0); upd(); isConfirming=true; title.setText("Confirm Your PIN"); sub.setText("Enter same PIN again"); hint.setText("Confirm PIN ••••"); } else if(isCreating&&isConfirming){ if(pin.toString().equals(first.toString())){ prefs.edit().putString("parent_pin",pin.toString()).apply(); startActivity(new Intent(this,DashboardActivity.class)); finish(); } else { pin.setLength(0); first.setLength(0); isConfirming=false; title.setText("Create Parent PIN"); sub.setText("Set a secret PIN only parents know"); upd(); } } else { if(pin.toString().equals(saved)){ startActivity(new Intent(this,DashboardActivity.class)); finish(); } else { pin.setLength(0); upd(); } } }
           }
           EOF
-
           cat > app/src/main/java/com/safeguard/onehub/DashboardActivity.java <<'EOF'
-          package com.safeguard.onehub;
-          import android.app.Activity; import android.content.Intent; import android.os.Bundle;
+          package com.safeguard.onehub; import android.app.Activity; import android.content.Intent; import android.os.Bundle;
           public class DashboardActivity extends Activity {
               protected void onCreate(Bundle b){ super.onCreate(b); setContentView(R.layout.activity_dashboard);
+                  findViewById(R.id.cardKids).setOnClickListener(v->startActivity(new Intent(this,KidsActivity.class)));
+                  findViewById(R.id.cardScreenTime).setOnClickListener(v->startActivity(new Intent(this,ScreenTimeActivity.class)));
+                  findViewById(R.id.cardFilter).setOnClickListener(v->startActivity(new Intent(this,FilterActivity.class)));
+                  findViewById(R.id.cardLocation).setOnClickListener(v->startActivity(new Intent(this,LocationActivity.class)));
+                  findViewById(R.id.cardReports).setOnClickListener(v->startActivity(new Intent(this,ReportsActivity.class)));
+                  findViewById(R.id.cardControls).setOnClickListener(v->startActivity(new Intent(this,ControlsActivity.class)));
                   findViewById(R.id.btnLock).setOnClickListener(v->{ startActivity(new Intent(this,MainActivity.class)); finish(); });
                   findViewById(R.id.btnChangePin).setOnClickListener(v->{ getSharedPreferences("safeguard_secure",MODE_PRIVATE).edit().remove("parent_pin").apply(); startActivity(new Intent(this,MainActivity.class)); finish(); });
               }
           }
+          EOF
+          cat > app/src/main/java/com/safeguard/onehub/KidsActivity.java <<'EOF'
+          package com.safeguard.onehub; import android.app.Activity; import android.os.Bundle; import android.widget.LinearLayout; import android.widget.TextView;
+          public class KidsActivity extends Activity { protected void onCreate(Bundle b){ super.onCreate(b); setContentView(R.layout.activity_simple); ((TextView)findViewById(R.id.headerTitle)).setText("👨‍👩‍👧 Kids Profiles"); ((TextView)findViewById(R.id.headerSub)).setText("Manage your children"); LinearLayout box=findViewById(R.id.contentBox); String[] k={"Thabo - 9 years - Grade 4 - 2h/day limit","Amahle - 12 years - Grade 7 - 3h/day limit"}; for(String s:k){ TextView tv=new TextView(this); tv.setText("• "+s); tv.setTextColor(-1); tv.setPadding(0,14,0,14); box.addView(tv);} findViewById(R.id.btnBack).setOnClickListener(v->finish()); } }
+          EOF
+          cat > app/src/main/java/com/safeguard/onehub/ScreenTimeActivity.java <<'EOF'
+          package com.safeguard.onehub; import android.app.Activity; import android.os.Bundle; import android.widget.LinearLayout; import android.widget.TextView;
+          public class ScreenTimeActivity extends Activity { protected void onCreate(Bundle b){ super.onCreate(b); setContentView(R.layout.activity_simple); ((TextView)findViewById(R.id.headerTitle)).setText("⏱️ Screen Time"); ((TextView)findViewById(R.id.headerSub)).setText("Today 3h 24m • Weekly 18h 12m"); LinearLayout box=findViewById(R.id.contentBox); String[] d={"YouTube - 1h 12m","TikTok - 52m","Games - 45m","WhatsApp - 20m","Learning - 15m"}; for(String s:d){ TextView tv=new TextView(this); tv.setText("• "+s); tv.setTextColor(-1); tv.setPadding(0,12,0,12); box.addView(tv);} findViewById(R.id.btnBack).setOnClickListener(v->finish()); } }
+          EOF
+          cat > app/src/main/java/com/safeguard/onehub/FilterActivity.java <<'EOF'
+          package com.safeguard.onehub; import android.app.Activity; import android.os.Bundle; import android.widget.LinearLayout; import android.widget.TextView;
+          public class FilterActivity extends Activity { protected void onCreate(Bundle b){ super.onCreate(b); setContentView(R.layout.activity_simple); ((TextView)findViewById(R.id.headerTitle)).setText("🛡️ Content Filter"); ((TextView)findViewById(R.id.headerSub)).setText("Active • Safe • 124 blocked today"); LinearLayout box=findViewById(R.id.contentBox); String[] f={"✓ Adult content - BLOCKED","✓ Violence - BLOCKED","✓ Gambling - BLOCKED","✓ Social after 21:00 - BLOCKED","✓ Safe Search - ON"}; for(String s:f){ TextView tv=new TextView(this); tv.setText(s); tv.setTextColor(0xFF4CAF50); tv.setPadding(0,12,0,12); box.addView(tv);} findViewById(R.id.btnBack).setOnClickListener(v->finish()); } }
+          EOF
+          cat > app/src/main/java/com/safeguard/onehub/LocationActivity.java <<'EOF'
+          package com.safeguard.onehub; import android.app.Activity; import android.os.Bundle; import android.widget.LinearLayout; import android.widget.TextView;
+          public class LocationActivity extends Activity { protected void onCreate(Bundle b){ super.onCreate(b); setContentView(R.layout.activity_simple); ((TextView)findViewById(R.id.headerTitle)).setText("📍 Location"); ((TextView)findViewById(R.id.headerSub)).setText("Last seen 5 min ago"); LinearLayout box=findViewById(R.id.contentBox); String[] l={"Thabo - Home - Safe • 25m ago","Amahle - School - Safe • 5m ago","Safe Zones: Home, School, Church"}; for(String s:l){ TextView tv=new TextView(this); tv.setText("• "+s); tv.setTextColor(-1); tv.setPadding(0,12,0,12); box.addView(tv);} findViewById(R.id.btnBack).setOnClickListener(v->finish()); } }
+          EOF
+          cat > app/src/main/java/com/safeguard/onehub/ReportsActivity.java <<'EOF'
+          package com.safeguard.onehub; import android.app.Activity; import android.os.Bundle; import android.widget.LinearLayout; import android.widget.TextView;
+          public class ReportsActivity extends Activity { protected void onCreate(Bundle b){ super.onCreate(b); setContentView(R.layout.activity_simple); ((TextView)findViewById(R.id.headerTitle)).setText("📊 Reports"); ((TextView)findViewById(R.id.headerSub)).setText("Weekly summary for Dr Mpho"); LinearLayout box=findViewById(R.id.contentBox); String[] r={"Week: 18h total • 94% safe","YouTube Kids (safe)","124 harmful blocked","2 late-night blocked 22:30","Overall: Excellent ✓"}; for(String s:r){ TextView tv=new TextView(this); tv.setText("• "+s); tv.setTextColor(-1); tv.setPadding(0,12,0,12); box.addView(tv);} findViewById(R.id.btnBack).setOnClickListener(v->finish()); } }
+          EOF
+          cat > app/src/main/java/com/safeguard/onehub/ControlsActivity.java <<'EOF'
+          package com.safeguard.onehub; import android.app.Activity; import android.os.Bundle; import android.widget.LinearLayout; import android.widget.TextView;
+          public class ControlsActivity extends Activity { protected void onCreate(Bundle b){ super.onCreate(b); setContentView(R.layout.activity_simple); ((TextView)findViewById(R.id.headerTitle)).setText("⚙️ App Controls"); ((TextView)findViewById(R.id.headerSub)).setText("Set limits per app"); LinearLayout box=findViewById(R.id.contentBox); String[] c={"YouTube - 1h • Allowed","TikTok - 30m • School block","Games - 1h • Weekend only","WhatsApp - Always allowed","Camera - Allowed"}; for(String s:c){ TextView tv=new TextView(this); tv.setText("• "+s); tv.setTextColor(-1); tv.setPadding(0,12,0,12); box.addView(tv);} findViewById(R.id.btnBack).setOnClickListener(v->finish()); } }
           EOF
 
       - uses: gradle/gradle-build-action@v2
         with:
           gradle-version: 8.5
           arguments: :app:assembleDebug
-
       - uses: actions/upload-artifact@v4
         with:
-          name: SafeGuard-FULL-APP-FIXED-v7
+          name: SafeGuard-SAME-LAYOUT-v81-FINAL
           path: app/build/outputs/apk/debug/*.apk
