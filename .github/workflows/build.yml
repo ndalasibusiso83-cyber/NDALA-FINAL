@@ -1,4 +1,4 @@
-name: Build NDALA APK
+name: Build SafeGuard APK
 on: push
 jobs:
   build:
@@ -9,7 +9,8 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: BUILD NDALA - PARENT SET PIN - NO DEFAULT FIXED
+
+      - name: BUILD SAFEGUARD ONE HUB - SECURE NO 1234
         run: |
           cat > settings.gradle <<'EOF'
           pluginManagement {
@@ -26,7 +27,7 @@ jobs:
                   mavenCentral()
               }
           }
-          rootProject.name = "NDALA-FINAL"
+          rootProject.name = "SAFEGUARD-ONE-HUB"
           include ':app'
           EOF
 
@@ -43,14 +44,14 @@ jobs:
               id 'com.android.application'
           }
           android {
-              namespace 'com.ndala.secure'
+              namespace 'com.safeguard.onehub'
               compileSdk 34
               defaultConfig {
-                  applicationId "com.ndala.secure"
+                  applicationId "com.safeguard.onehub"
                   minSdk 24
                   targetSdk 34
-                  versionCode 4
-                  versionName "4.0"
+                  versionCode 6
+                  versionName "6.0-SECURE"
               }
               buildTypes {
                   release {
@@ -67,59 +68,65 @@ jobs:
           mkdir -p app/src/main/res/layout
           mkdir -p app/src/main/res/values
           mkdir -p app/src/main/res/drawable
-          mkdir -p app/src/main/java/com/ndala/secure
+          mkdir -p app/src/main/java/com/safeguard/onehub
 
           cat > app/src/main/res/values/colors.xml <<'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <resources>
-              <color name="black">#000000</color>
-              <color name="white">#FFFFFF</color>
+              <color name="dark_green">#0F3D2E</color>
+              <color name="light_green">#1E8C4A</color>
               <color name="gold">#FFC107</color>
-              <color name="gray">#333333</color>
-              <color name="dark_gray">#1A1A1A</color>
+              <color name="white">#FFFFFF</color>
+              <color name="gray_text">#A8D5BA</color>
           </resources>
           EOF
 
           cat > app/src/main/res/values/strings.xml <<'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <resources>
-              <string name="app_name">NDALA SECURE</string>
+              <string name="app_name">SafeGuard One Hub</string>
           </resources>
           EOF
 
-          cat > app/src/main/res/values/styles.xml <<'EOF'
+          cat > app/src/main/res/drawable/bg_input.xml <<'EOF'
           <?xml version="1.0" encoding="utf-8"?>
-          <resources>
-              <style name="PinButton">
-                  <item name="android:layout_width">88dp</item>
-                  <item name="android:layout_height">88dp</item>
-                  <item name="android:layout_margin">8dp</item>
-                  <item name="android:background">@drawable/btn_circle</item>
-                  <item name="android:textColor">#FFFFFF</item>
-                  <item name="android:textSize">28sp</item>
-                  <item name="android:textStyle">bold</item>
-              </style>
-          </resources>
+          <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+              <solid android:color="#FFFFFF"/>
+              <corners android:radius="16dp"/>
+          </shape>
           EOF
 
-          cat > app/src/main/res/drawable/btn_circle.xml <<'EOF'
+          cat > app/src/main/res/drawable/btn_unlock.xml <<'EOF'
           <?xml version="1.0" encoding="utf-8"?>
-          <selector xmlns:android="http://schemas.android.com/apk/res/android">
-              <item android:state_pressed="true">
-                  <shape android:shape="oval"><solid android:color="#FFC107"/></shape>
-              </item>
-              <item>
-                  <shape android:shape="oval"><solid android:color="#1A1A1A"/><stroke android:width="1dp" android:color="#333333"/></shape>
-              </item>
-          </selector>
+          <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+              <solid android:color="#1E8C4A"/>
+              <corners android:radius="16dp"/>
+          </shape>
+          EOF
+
+          cat > app/src/main/res/drawable/btn_cancel.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+              <solid android:color="#0F3D2E"/>
+              <corners android:radius="16dp"/>
+              <stroke android:width="2dp" android:color="#FFFFFF"/>
+          </shape>
+          EOF
+
+          cat > app/src/main/res/drawable/lock_bg.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+              <solid android:color="#FFC107"/>
+              <corners android:radius="20dp"/>
+          </shape>
           EOF
 
           cat > app/src/main/res/drawable/dot_empty.xml <<'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
-              <solid android:color="#000000"/>
-              <stroke android:width="2dp" android:color="#333333"/>
-              <size android:width="20dp" android:height="20dp"/>
+              <solid android:color="#0F3D2E"/>
+              <stroke android:width="2dp" android:color="#3A6B5A"/>
+              <size android:width="16dp" android:height="16dp"/>
           </shape>
           EOF
 
@@ -127,16 +134,7 @@ jobs:
           <?xml version="1.0" encoding="utf-8"?>
           <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
               <solid android:color="#FFC107"/>
-              <size android:width="20dp" android:height="20dp"/>
-          </shape>
-          EOF
-
-          cat > app/src/main/res/drawable/card_bg.xml <<'EOF'
-          <?xml version="1.0" encoding="utf-8"?>
-          <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-              <solid android:color="#1A1A1A"/>
-              <corners android:radius="16dp"/>
-              <stroke android:width="1dp" android:color="#333333"/>
+              <size android:width="16dp" android:height="16dp"/>
           </shape>
           EOF
 
@@ -145,83 +143,147 @@ jobs:
           <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="#000000"
+              android:background="#0F3D2E"
               android:orientation="vertical"
-              android:gravity="center_horizontal"
-              android:padding="24dp">
-              <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="NDALA SECURE" android:textColor="#FFC107" android:textSize="28sp" android:textStyle="bold" android:layout_marginTop="60dp"/>
-              <TextView android:id="@+id/titleText" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Enter Your PIN" android:textColor="#FFFFFF" android:textSize="16sp" android:layout_marginTop="12dp" android:alpha="0.7"/>
-              <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="40dp" android:layout_marginBottom="50dp">
-                  <View android:id="@+id/dot1" android:layout_width="20dp" android:layout_height="20dp" android:background="@drawable/dot_empty" android:layout_margin="12dp"/>
-                  <View android:id="@+id/dot2" android:layout_width="20dp" android:layout_height="20dp" android:background="@drawable/dot_empty" android:layout_margin="12dp"/>
-                  <View android:id="@+id/dot3" android:layout_width="20dp" android:layout_height="20dp" android:background="@drawable/dot_empty" android:layout_margin="12dp"/>
-                  <View android:id="@+id/dot4" android:layout_width="20dp" android:layout_height="20dp" android:background="@drawable/dot_empty" android:layout_margin="12dp"/>
+              android:padding="24dp"
+              android:gravity="center_horizontal">
+
+              <TextView
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="SafeGuard One Hub"
+                  android:textColor="#FFFFFF"
+                  android:textSize="20sp"
+                  android:textStyle="bold"
+                  android:layout_marginTop="40dp"
+                  android:layout_marginBottom="60dp"/>
+
+              <LinearLayout
+                  android:layout_width="80dp"
+                  android:layout_height="80dp"
+                  android:background="@drawable/lock_bg"
+                  android:gravity="center"
+                  android:layout_marginBottom="24dp">
+                  <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🔒" android:textSize="36sp"/>
               </LinearLayout>
+
+              <TextView android:id="@+id/titleText"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="Parent PIN Required"
+                  android:textColor="#FFFFFF"
+                  android:textSize="26sp"
+                  android:textStyle="bold"
+                  android:gravity="center"/>
+
+              <TextView android:id="@+id/subtitleText"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="Kids cannot access dashboard"
+                  android:textColor="#A8D5BA"
+                  android:textSize="14sp"
+                  android:layout_marginTop="12dp"
+                  android:layout_marginBottom="32dp"
+                  android:gravity="center"/>
+
+              <LinearLayout
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:layout_marginBottom="24dp">
+                  <View android:id="@+id/dot1" android:layout_width="16dp" android:layout_height="16dp" android:background="@drawable/dot_empty" android:layout_margin="8dp"/>
+                  <View android:id="@+id/dot2" android:layout_width="16dp" android:layout_height="16dp" android:background="@drawable/dot_empty" android:layout_margin="8dp"/>
+                  <View android:id="@+id/dot3" android:layout_width="16dp" android:layout_height="16dp" android:background="@drawable/dot_empty" android:layout_margin="8dp"/>
+                  <View android:id="@+id/dot4" android:layout_width="16dp" android:layout_height="16dp" android:background="@drawable/dot_empty" android:layout_margin="8dp"/>
+              </LinearLayout>
+
+              <TextView android:id="@+id/hintText"
+                  android:layout_width="match_parent"
+                  android:layout_height="60dp"
+                  android:background="@drawable/bg_input"
+                  android:text="Enter PIN ••••"
+                  android:textColor="#999999"
+                  android:textSize="18sp"
+                  android:gravity="center"
+                  android:layout_marginBottom="20dp"/>
+
               <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center">
                   <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
-                      <Button android:id="@+id/btn1" style="@style/PinButton" android:text="1"/>
-                      <Button android:id="@+id/btn2" style="@style/PinButton" android:text="2"/>
-                      <Button android:id="@+id/btn3" style="@style/PinButton" android:text="3"/>
+                      <Button android:id="@+id/btn1" android:layout_width="80dp" android:layout_height="80dp" android:layout_margin="6dp" android:text="1" android:textSize="24sp" android:textColor="#FFFFFF" android:background="@drawable/btn_cancel"/>
+                      <Button android:id="@+id/btn2" android:layout_width="80dp" android:layout_height="80dp" android:layout_margin="6dp" android:text="2" android:textSize="24sp" android:textColor="#FFFFFF" android:background="@drawable/btn_cancel"/>
+                      <Button android:id="@+id/btn3" android:layout_width="80dp" android:layout_height="80dp" android:layout_margin="6dp" android:text="3" android:textSize="24sp" android:textColor="#FFFFFF" android:background="@drawable/btn_cancel"/>
                   </LinearLayout>
                   <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
-                      <Button android:id="@+id/btn4" style="@style/PinButton" android:text="4"/>
-                      <Button android:id="@+id/btn5" style="@style/PinButton" android:text="5"/>
-                      <Button android:id="@+id/btn6" style="@style/PinButton" android:text="6"/>
+                      <Button android:id="@+id/btn4" android:layout_width="80dp" android:layout_height="80dp" android:layout_margin="6dp" android:text="4" android:textSize="24sp" android:textColor="#FFFFFF" android:background="@drawable/btn_cancel"/>
+                      <Button android:id="@+id/btn5" android:layout_width="80dp" android:layout_height="80dp" android:layout_margin="6dp" android:text="5" android:textSize="24sp" android:textColor="#FFFFFF" android:background="@drawable/btn_cancel"/>
+                      <Button android:id="@+id/btn6" android:layout_width="80dp" android:layout_height="80dp" android:layout_margin="6dp" android:text="6" android:textSize="24sp" android:textColor="#FFFFFF" android:background="@drawable/btn_cancel"/>
                   </LinearLayout>
                   <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
-                      <Button android:id="@+id/btn7" style="@style/PinButton" android:text="7"/>
-                      <Button android:id="@+id/btn8" style="@style/PinButton" android:text="8"/>
-                      <Button android:id="@+id/btn9" style="@style/PinButton" android:text="9"/>
+                      <Button android:id="@+id/btn7" android:layout_width="80dp" android:layout_height="80dp" android:layout_margin="6dp" android:text="7" android:textSize="24sp" android:textColor="#FFFFFF" android:background="@drawable/btn_cancel"/>
+                      <Button android:id="@+id/btn8" android:layout_width="80dp" android:layout_height="80dp" android:layout_margin="6dp" android:text="8" android:textSize="24sp" android:textColor="#FFFFFF" android:background="@drawable/btn_cancel"/>
+                      <Button android:id="@+id/btn9" android:layout_width="80dp" android:layout_height="80dp" android:layout_margin="6dp" android:text="9" android:textSize="24sp" android:textColor="#FFFFFF" android:background="@drawable/btn_cancel"/>
                   </LinearLayout>
                   <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
-                      <View android:layout_width="88dp" android:layout_height="88dp" android:layout_margin="8dp"/>
-                      <Button android:id="@+id/btn0" style="@style/PinButton" android:text="0"/>
-                      <Button android:id="@+id/btnDel" style="@style/PinButton" android:text="⌫" android:textSize="22sp"/>
+                      <View android:layout_width="80dp" android:layout_height="80dp" android:layout_margin="6dp"/>
+                      <Button android:id="@+id/btn0" android:layout_width="80dp" android:layout_height="80dp" android:layout_margin="6dp" android:text="0" android:textSize="24sp" android:textColor="#FFFFFF" android:background="@drawable/btn_cancel"/>
+                      <Button android:id="@+id/btnDel" android:layout_width="80dp" android:layout_height="80dp" android:layout_margin="6dp" android:text="⌫" android:textSize="20sp" android:textColor="#FFFFFF" android:background="@drawable/btn_cancel"/>
                   </LinearLayout>
               </LinearLayout>
-              <TextView android:id="@+id/statusText" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Kids cannot access dashboard" android:textColor="#888888" android:textSize="13sp" android:layout_marginTop="30dp" android:gravity="center"/>
+
+              <Button android:id="@+id/btnUnlock"
+                  android:layout_width="match_parent"
+                  android:layout_height="56dp"
+                  android:layout_marginTop="24dp"
+                  android:background="@drawable/btn_unlock"
+                  android:text="🔒 Unlock Dashboard"
+                  android:textColor="#FFFFFF"
+                  android:textStyle="bold"/>
+
+              <Button android:id="@+id/btnCancel"
+                  android:layout_width="match_parent"
+                  android:layout_height="56dp"
+                  android:layout_marginTop="12dp"
+                  android:background="@drawable/btn_cancel"
+                  android:text="Cancel"
+                  android:textColor="#FFFFFF"
+                  android:textStyle="bold"/>
+
+              <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🛡️ Protected • Secure Access" android:textColor="#5A8A6F" android:textSize="11sp" android:layout_marginTop="24dp"/>
           </LinearLayout>
           EOF
 
-          cat > app/src/main/res/layout/activity_vault.xml <<'EOF'
+          cat > app/src/main/res/layout/activity_dashboard.xml <<'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="#000000"
+              android:background="#0F3D2E"
               android:orientation="vertical"
               android:padding="24dp">
-              <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="PARENT DASHBOARD" android:textColor="#FFC107" android:textSize="24sp" android:textStyle="bold" android:layout_marginTop="40dp"/>
-              <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="✓ SECURED - Only parents can see this" android:textColor="#4CAF50" android:textSize="13sp" android:layout_marginTop="8dp"/>
-              <LinearLayout android:layout_width="match_parent" android:layout_height="90dp" android:background="@drawable/card_bg" android:orientation="horizontal" android:gravity="center_vertical" android:padding="16dp" android:layout_marginTop="32dp">
-                  <TextView android:layout_width="50dp" android:layout_height="50dp" android:text="👨‍👩‍👧" android:textSize="28sp" android:gravity="center" android:background="@drawable/btn_circle"/>
-                  <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginLeft="16dp">
-                      <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Safeguard Controls" android:textColor="#FFFFFF" android:textSize="16sp" android:textStyle="bold"/>
-                      <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Manage kids protection" android:textColor="#888888" android:textSize="12sp"/>
-                  </LinearLayout>
-              </LinearLayout>
-              <Button android:id="@+id/btnChangePin" android:layout_width="match_parent" android:layout_height="56dp" android:text="Change PIN 🔑" android:textColor="#000000" android:backgroundTint="#FFC107" android:layout_marginTop="24dp" android:textStyle="bold"/>
-              <Button android:id="@+id/btnLock" android:layout_width="match_parent" android:layout_height="56dp" android:text="Lock Dashboard 🔒" android:textColor="#FFFFFF" android:backgroundTint="#333333" android:layout_marginTop="12dp"/>
+              <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SafeGuard One Hub" android:textColor="#FFFFFF" android:textSize="20sp" android:textStyle="bold" android:layout_marginTop="40dp"/>
+              <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Parent Dashboard - SECURED" android:textColor="#A8D5BA" android:textSize="14sp" android:layout_marginTop="8dp"/>
+              <Button android:id="@+id/btnChangePin" android:layout_width="match_parent" android:layout_height="56dp" android:text="Change PIN 🔑" android:background="@drawable/btn_unlock" android:textColor="#FFFFFF" android:layout_marginTop="40dp"/>
+              <Button android:id="@+id/btnLock" android:layout_width="match_parent" android:layout_height="56dp" android:text="Lock Dashboard 🔒" android:background="@drawable/btn_cancel" android:textColor="#FFFFFF" android:layout_marginTop="12dp"/>
           </LinearLayout>
           EOF
 
           cat > app/src/main/AndroidManifest.xml <<'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-              <application android:label="NDALA SECURE" android:theme="@android:style/Theme.Black.NoTitleBar">
+              <application android:label="SafeGuard One Hub" android:theme="@android:style/Theme.Black.NoTitleBar">
                   <activity android:name=".MainActivity" android:exported="true">
                       <intent-filter>
                           <action android:name="android.intent.action.MAIN"/>
                           <category android:name="android.intent.category.LAUNCHER"/>
                       </intent-filter>
                   </activity>
-                  <activity android:name=".VaultActivity" android:exported="false"/>
+                  <activity android:name=".DashboardActivity" android:exported="false"/>
               </application>
           </manifest>
           EOF
 
-          cat > app/src/main/java/com/ndala/secure/MainActivity.java <<'EOF'
-          package com.ndala.secure;
+          cat > app/src/main/java/com/safeguard/onehub/MainActivity.java <<'EOF'
+          package com.safeguard.onehub;
           import android.app.Activity;
           import android.content.Intent;
           import android.content.SharedPreferences;
@@ -229,29 +291,31 @@ jobs:
           import android.view.View;
           import android.widget.Button;
           import android.widget.TextView;
+          import android.widget.Toast;
           public class MainActivity extends Activity {
               private StringBuilder pin = new StringBuilder();
               private StringBuilder firstPin = new StringBuilder();
               private View dot1, dot2, dot3, dot4;
-              private TextView status, title;
-              private boolean isCreating = false;
-              private boolean isConfirming = false;
+              private TextView title, subtitle, hint;
+              private boolean isCreating = false, isConfirming = false;
               private SharedPreferences prefs;
               @Override
               protected void onCreate(Bundle b) {
                   super.onCreate(b);
                   setContentView(R.layout.activity_main);
-                  prefs = getSharedPreferences("ndala_secure", MODE_PRIVATE);
+                  prefs = getSharedPreferences("safeguard_secure", MODE_PRIVATE);
                   dot1 = findViewById(R.id.dot1); dot2 = findViewById(R.id.dot2); dot3 = findViewById(R.id.dot3); dot4 = findViewById(R.id.dot4);
-                  status = findViewById(R.id.statusText); title = findViewById(R.id.titleText);
+                  title = findViewById(R.id.titleText); subtitle = findViewById(R.id.subtitleText); hint = findViewById(R.id.hintText);
                   String savedPin = prefs.getString("parent_pin", null);
                   if (savedPin == null) {
                       isCreating = true;
                       title.setText("Create Parent PIN");
-                      status.setText("Set a secret PIN only parents know");
+                      subtitle.setText("Set a secret PIN only parents know");
+                      hint.setText("Create PIN ••••");
                   } else {
-                      title.setText("Enter Your PIN");
-                      status.setText("Kids cannot access dashboard");
+                      title.setText("Parent PIN Required");
+                      subtitle.setText("Kids cannot access dashboard");
+                      hint.setText("Enter PIN ••••");
                   }
                   int[] btnIds = {R.id.btn0,R.id.btn1,R.id.btn2,R.id.btn3,R.id.btn4,R.id.btn5,R.id.btn6,R.id.btn7,R.id.btn8,R.id.btn9};
                   for (int id : btnIds) {
@@ -259,71 +323,71 @@ jobs:
                           if (pin.length() < 4) {
                               pin.append(((Button) v).getText().toString());
                               updateDots();
-                              if (pin.length() == 4) handlePinComplete();
+                              if (pin.length() == 4) handlePin();
                           }
                       });
                   }
-                  findViewById(R.id.btnDel).setOnClickListener(v -> {
-                      if (pin.length() > 0) {
-                          pin.deleteCharAt(pin.length()-1);
-                          updateDots();
-                      }
-                  });
+                  findViewById(R.id.btnDel).setOnClickListener(v -> { if (pin.length() > 0) { pin.deleteCharAt(pin.length()-1); updateDots(); } });
+                  findViewById(R.id.btnUnlock).setOnClickListener(v -> { if (pin.length() == 4) handlePin(); else Toast.makeText(this, "Enter 4 digits", Toast.LENGTH_SHORT).show(); });
+                  findViewById(R.id.btnCancel).setOnClickListener(v -> finish());
               }
               private void updateDots() {
                   View[] dots = {dot1, dot2, dot3, dot4};
-                  for (int i = 0; i < 4; i++) {
-                      dots[i].setBackgroundResource(i < pin.length()? R.drawable.dot_filled : R.drawable.dot_empty);
+                  for (int i = 0; i < 4; i++) dots[i].setBackgroundResource(i < pin.length()? R.drawable.dot_filled : R.drawable.dot_empty);
+                  if (pin.length() == 0) hint.setText(isCreating? "Create PIN ••••" : "Enter PIN ••••");
+                  else {
+                      StringBuilder sb = new StringBuilder();
+                      for (int i = 0; i < pin.length(); i++) sb.append("•");
+                      for (int i = pin.length(); i < 4; i++) sb.append("○");
+                      hint.setText("PIN: " + sb.toString());
                   }
               }
-              private void handlePinComplete() {
+              private void handlePin() {
                   String savedPin = prefs.getString("parent_pin", null);
                   if (isCreating &&!isConfirming) {
                       firstPin = new StringBuilder(pin.toString());
                       pin.setLength(0); updateDots();
                       isConfirming = true;
                       title.setText("Confirm Your PIN");
-                      status.setText("Enter same PIN again");
+                      subtitle.setText("Enter same PIN again");
+                      hint.setText("Confirm PIN ••••");
+                      Toast.makeText(this, "Confirm your PIN", Toast.LENGTH_SHORT).show();
                   } else if (isCreating && isConfirming) {
                       if (pin.toString().equals(firstPin.toString())) {
                           prefs.edit().putString("parent_pin", pin.toString()).apply();
-                          status.setText("PIN Saved!");
-                          startActivity(new Intent(this, VaultActivity.class)); finish();
+                          Toast.makeText(this, "PIN Saved! ✓", Toast.LENGTH_SHORT).show();
+                          startActivity(new Intent(this, DashboardActivity.class)); finish();
                       } else {
-                          status.setText("PINs don't match - Try again");
+                          Toast.makeText(this, "PINs don't match!", Toast.LENGTH_SHORT).show();
                           pin.setLength(0); firstPin.setLength(0); isConfirming = false;
-                          title.setText("Create Parent PIN"); updateDots();
-                          status.postDelayed(() -> status.setText("Set a secret PIN only parents know"), 1500);
+                          title.setText("Create Parent PIN"); subtitle.setText("Set a secret PIN only parents know");
+                          updateDots();
                       }
                   } else {
                       if (pin.toString().equals(savedPin)) {
-                          startActivity(new Intent(this, VaultActivity.class));
-                          pin.setLength(0); updateDots();
+                          startActivity(new Intent(this, DashboardActivity.class)); finish();
                       } else {
-                          status.setText("Wrong PIN - Try again");
+                          Toast.makeText(this, "Wrong PIN!", Toast.LENGTH_SHORT).show();
                           pin.setLength(0); updateDots();
-                          status.postDelayed(() -> status.setText("Kids cannot access dashboard"), 1500);
                       }
                   }
               }
           }
           EOF
 
-          cat > app/src/main/java/com/ndala/secure/VaultActivity.java <<'EOF'
-          package com.ndala.secure;
+          cat > app/src/main/java/com/safeguard/onehub/DashboardActivity.java <<'EOF'
+          package com.safeguard.onehub;
           import android.app.Activity;
           import android.content.Intent;
           import android.os.Bundle;
-          public class VaultActivity extends Activity {
+          public class DashboardActivity extends Activity {
               @Override
               protected void onCreate(Bundle b) {
                   super.onCreate(b);
-                  setContentView(R.layout.activity_vault);
-                  findViewById(R.id.btnLock).setOnClickListener(v -> {
-                      startActivity(new Intent(this, MainActivity.class)); finish();
-                  });
+                  setContentView(R.layout.activity_dashboard);
+                  findViewById(R.id.btnLock).setOnClickListener(v -> { startActivity(new Intent(this, MainActivity.class)); finish(); });
                   findViewById(R.id.btnChangePin).setOnClickListener(v -> {
-                      getSharedPreferences("ndala_secure", MODE_PRIVATE).edit().remove("parent_pin").apply();
+                      getSharedPreferences("safeguard_secure", MODE_PRIVATE).edit().remove("parent_pin").apply();
                       startActivity(new Intent(this, MainActivity.class)); finish();
                   });
               }
@@ -339,5 +403,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: NDALA-PARENT-PIN-NO-DEFAULT
+          name: SafeGuard-One-Hub-SECURE-NO-1234
           path: app/build/outputs/apk/debug/*.apk
