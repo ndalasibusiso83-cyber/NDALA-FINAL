@@ -9,9 +9,8 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: FIX BROKEN activity_main.xml AT LINE 22
+      - name: FIX PACKAGE NAME - final is Java keyword
         run: |
-          echo "Fixing root files"
           cat > settings.gradle <<'EOF'
           pluginManagement {
               repositories { google(); mavenCentral(); gradlePluginPortal() }
@@ -27,13 +26,15 @@ jobs:
           plugins { id 'com.android.application' version '8.2.2' apply false }
           EOF
           printf "org.gradle.jvmargs=-Xmx2048m\nandroid.useAndroidX=true\n" > gradle.properties
+          
+          # FIX: com.ndala.secure is valid - com.ndala.final is NOT valid
           cat > app/build.gradle <<'EOF'
           plugins { id 'com.android.application' }
           android {
-              namespace 'com.ndala.final'
+              namespace 'com.ndala.secure'
               compileSdk 34
               defaultConfig {
-                  applicationId "com.ndala.final"
+                  applicationId "com.ndala.secure"
                   minSdk 24
                   targetSdk 34
                   versionCode 1
@@ -45,7 +46,7 @@ jobs:
               implementation 'androidx.appcompat:appcompat:1.6.1'
           }
           EOF
-          echo ">>> DELETING BROKEN activity_main.xml line 22 <<<"
+          
           rm -rf app/src/main/res
           mkdir -p app/src/main/res/layout
           cat > app/src/main/res/layout/activity_main.xml <<'EOF'
@@ -61,15 +62,16 @@ jobs:
                   android:layout_height="wrap_content"
                   android:text="NDALA SECURE PIN - BUILD SUCCESS!"
                   android:textColor="#FFFFFF"
-                  android:textSize="20sp"
-                  android:padding="20dp" />
+                  android:textSize="22sp"
+                  android:padding="24dp" />
           </LinearLayout>
           EOF
+          
           mkdir -p app/src/main
           cat > app/src/main/AndroidManifest.xml <<'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-              <application android:label="NDALA" android:theme="@android:style/Theme.Black.NoTitleBar">
+              <application android:label="NDALA SECURE" android:theme="@android:style/Theme.Black.NoTitleBar">
                   <activity android:name=".MainActivity" android:exported="true">
                       <intent-filter>
                           <action android:name="android.intent.action.MAIN"/>
@@ -79,9 +81,11 @@ jobs:
               </application>
           </manifest>
           EOF
-          mkdir -p app/src/main/java/com/ndala/final
-          cat > app/src/main/java/com/ndala/final/MainActivity.java <<'EOF'
-          package com.ndala.final;
+          
+          rm -rf app/src/main/java/com
+          mkdir -p app/src/main/java/com/ndala/secure
+          cat > app/src/main/java/com/ndala/secure/MainActivity.java <<'EOF'
+          package com.ndala.secure;
           import android.app.Activity;
           import android.os.Bundle;
           public class MainActivity extends Activity {
@@ -99,5 +103,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: NDALA-APK-FIXED
+          name: NDALA-SECURE-PIN-APK
           path: app/build/outputs/apk/debug/*.apk
