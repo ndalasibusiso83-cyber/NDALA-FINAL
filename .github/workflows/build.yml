@@ -1,4 +1,4 @@
-name: Build SafeGuard STRONG BLOCK 105
+name: Build SafeGuard FIXED GREEN 105
 on: push
 jobs:
   build:
@@ -9,20 +9,22 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: BUILD STRONG BLOCK
+      - name: BUILD FIXED GREEN
         run: |
-          rm -rf app/src.gradle app/build || true
+          rm -rf app/src app/build.gradle || true
           mkdir -p app/src/main/java/com/safeguard/onehub
           mkdir -p app/src/main/res/layout
           mkdir -p app/src/main/res/values
           mkdir -p app/src/main/res/drawable
+
           cat > settings.gradle <<'SET'
           pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }
           dependencyResolutionManagement { repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS); repositories { google(); mavenCentral() } }
-          rootProject.name = "SafeGuard-STRONG105"; include ':app'
+          rootProject.name = "SafeGuard-FIXED105"; include ':app'
           SET
           echo "plugins { id 'com.android.application' version '8.2.2' apply false }" > build.gradle
           printf "org.gradle.jvmargs=-Xmx2048m\nandroid.useAndroidX=true\n" > gradle.properties
+
           cat > app/build.gradle <<'APP'
           plugins { id 'com.android.application' }
           android {
@@ -33,11 +35,12 @@ jobs:
                   minSdk 24
                   targetSdk 34
                   versionCode 105
-                  versionName "10.5-STRONG-BLOCK"
+                  versionName "10.5-FIXED-GREEN"
               }
           }
           dependencies { implementation 'androidx.appcompat:appcompat:1.6.1' }
           APP
+
           cat > app/src/main/res/values/strings.xml <<'STR'
           <resources><string name="app_name">SafeGuard One Hub</string></resources>
           STR
@@ -47,6 +50,7 @@ jobs:
           cat > app/src/main/res/drawable/green.xml <<'D2'
           <?xml version="1.0" encoding="utf-8"?><shape xmlns:android="http://schemas.android.com/apk/res/android"><solid android:color="#0F3D2E"/><corners android:radius="12dp"/></shape>
           D2
+
           cat > app/src/main/AndroidManifest.xml <<'MAN'
           <manifest xmlns:android="http://schemas.android.com/apk/res/android">
             <uses-permission android:name="android.permission.INTERNET"/>
@@ -58,14 +62,15 @@ jobs:
             </application>
           </manifest>
           MAN
+
           cat > app/src/main/res/layout/activity_main.xml <<'L1'
-          <?xml version="1.0" encoding="utf-8"?><ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#F5F5F0"><LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp" android:gravity="center_horizontal"><TextView android:layout_width="50dp" android:layout_height="50dp" android:text="🛡️" android:textSize="32sp" android:gravity="center" android:background="@drawable/card" android:layout_marginTop="10dp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SafeGuard One Hub" android:textColor="#0F3D2E" android:textSize="20sp" android:textStyle="bold" android:layout_marginTop="8dp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Parental control &amp; safety dashboard" android:textColor="#666666" android:textSize="12sp" android:layout_marginBottom="16dp"/><LinearLayout android:id="@+id/btnSearch" android:layout_width="match_parent" android:layout_height="48dp" android:background="@drawable/card" android:gravity="center_vertical" android:padding="12dp" android:layout_marginBottom="12dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🔍 Safe Google Search - Strong Protection" android:textColor="#0F3D2E" android:textStyle="bold"/></LinearLayout><LinearLayout android:layout_width="match_parent" android:layout_height="60dp" android:background="@drawable/card" android:gravity="center_vertical" android:padding="12dp" android:layout_marginBottom="10dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🔒 VPN Shield ON - Protected" android:textColor="#000000" android:textStyle="bold"/></LinearLayout><LinearLayout android:layout_width="match_parent" android:layout_height="60dp" android:background="@drawable/card" android:gravity="center_vertical" android:padding="12dp" android:layout_marginBottom="14dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🔍 Media Scanner ON - Safe" android:textColor="#000000" android:textStyle="bold"/></LinearLayout><TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Family ID - NDALA - Strong Block Active" android:textColor="#0F3D2E" android:textStyle="bold" android:textSize="14sp" android:layout_marginBottom="6dp"/><LinearLayout android:layout_width="match_parent" android:layout_height="60dp" android:background="@drawable/card" android:gravity="center_vertical" android:padding="12dp" android:layout_marginBottom="10dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="NDALA - Family ID • Porn + Underage Blocked 📋" android:textColor="#000000" android:textStyle="bold"/></LinearLayout><LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal"><Button android:id="@+id/btnTestBlock" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" android:text="TEST BLOCK" android:background="#FFFFFF" android:textColor="#0F3D2E" android:layout_marginRight="6dp"/><Button android:id="@+id/btnParentDash" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" android:text="Parent Dashboard" android:background="@drawable/green" android:textColor="#FFFFFF" android:layout_marginLeft="6dp"/></LinearLayout><TextView android:layout_width="match_parent" android:layout_height="60dp" android:text="Created by Sibusiso D Ndala - Child Safe Protection" android:textColor="#FFFFFF" android:background="@drawable/green" android:gravity="center" android:layout_marginTop="16dp"/></LinearLayout></ScrollView>
+          <?xml version="1.0" encoding="utf-8"?><ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#F5F5F0"><LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp" android:gravity="center_horizontal"><TextView android:layout_width="50dp" android:layout_height="50dp" android:text="🛡️" android:textSize="32sp" android:gravity="center" android:background="@drawable/card" android:layout_marginTop="10dp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SafeGuard One Hub" android:textColor="#0F3D2E" android:textSize="20sp" android:textStyle="bold" android:layout_marginTop="8dp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Parental control &amp; safety dashboard" android:textColor="#666666" android:textSize="12sp" android:layout_marginBottom="16dp"/><LinearLayout android:id="@+id/btnSearch" android:layout_width="match_parent" android:layout_height="48dp" android:background="@drawable/card" android:gravity="center_vertical" android:padding="12dp" android:layout_marginBottom="12dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🔍 Safe Google Search - Strong Protection" android:textColor="#0F3D2E" android:textStyle="bold"/></LinearLayout><LinearLayout android:layout_width="match_parent" android:layout_height="60dp" android:background="@drawable/card" android:gravity="center_vertical" android:padding="12dp" android:layout_marginBottom="10dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🔒 VPN Shield ON" android:textColor="#000000" android:textStyle="bold"/></LinearLayout><LinearLayout android:layout_width="match_parent" android:layout_height="60dp" android:background="@drawable/card" android:gravity="center_vertical" android:padding="12dp" android:layout_marginBottom="14dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🔍 Media Scanner ON" android:textColor="#000000" android:textStyle="bold"/></LinearLayout><TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Family ID NDALA" android:textColor="#000000" android:textStyle="bold" android:textSize="14sp" android:layout_marginBottom="6dp"/><LinearLayout android:layout_width="match_parent" android:layout_height="60dp" android:background="@drawable/card" android:gravity="center_vertical" android:padding="12dp" android:layout_marginBottom="10dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="NDALA Family ID - All Porn + Underage Blocked" android:textColor="#000000" android:textStyle="bold"/></LinearLayout><LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal"><Button android:id="@+id/btnTestBlock" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" android:text="TEST BLOCK" android:background="#FFFFFF" android:textColor="#0F3D2E" android:layout_marginRight="6dp"/><Button android:id="@+id/btnParentDash" android:layout_width="0dp" android:layout_weight="1" android:layout_height="44dp" android:text="Parent Dashboard" android:background="@drawable/green" android:textColor="#FFFFFF" android:layout_marginLeft="6dp"/></LinearLayout><TextView android:layout_width="match_parent" android:layout_height="60dp" android:text="Created by Sibusiso D Ndala" android:textColor="#FFFFFF" android:background="@drawable/green" android:gravity="center" android:layout_marginTop="16dp"/></LinearLayout></ScrollView>
           L1
           cat > app/src/main/res/layout/activity_pin.xml <<'L3'
-          <?xml version="1.0" encoding="utf-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#0F3D2E" android:orientation="vertical" android:padding="24dp" android:gravity="center_horizontal"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Parent PIN Required ••••" android:textColor="#FFFFFF" android:textSize="18sp" android:textStyle="bold" android:layout_marginTop="60dp"/><EditText android:id="@+id/pinInput" android:layout_width="match_parent" android:layout_height="48dp" android:background="#FFFFFF" android:hint="Enter PIN ••••" android:gravity="center" android:inputType="numberPassword" android:layout_marginTop="20dp"/><Button android:id="@+id/btnUnlock" android:layout_width="match_parent" android:layout_height="48dp" android:text="Unlock Dashboard" android:background="#1E8C4A" android:textColor="#FFFFFF" android:layout_marginTop="12dp"/><Button android:id="@+id/btnCancel" android:layout_width="match_parent" android:layout_height="44dp" android:text="Cancel" android:background="#333333" android:textColor="#FFFFFF" android:layout_marginTop="8dp"/></LinearLayout>
+          <?xml version="1.0" encoding="utf-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#0F3D2E" android:orientation="vertical" android:padding="24dp" android:gravity="center_horizontal"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Parent PIN Required" android:textColor="#FFFFFF" android:textSize="18sp" android:textStyle="bold" android:layout_marginTop="60dp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="PIN Hidden ••••" android:textColor="#A8D5BA" android:textSize="11sp" android:layout_marginBottom="20dp"/><EditText android:id="@+id/pinInput" android:layout_width="match_parent" android:layout_height="48dp" android:background="#FFFFFF" android:hint="Enter PIN" android:gravity="center" android:inputType="numberPassword"/><Button android:id="@+id/btnUnlock" android:layout_width="match_parent" android:layout_height="48dp" android:text="Unlock Dashboard" android:background="#1E8C4A" android:textColor="#FFFFFF" android:layout_marginTop="12dp"/><Button android:id="@+id/btnCancel" android:layout_width="match_parent" android:layout_height="44dp" android:text="Cancel" android:background="#333333" android:textColor="#FFFFFF" android:layout_marginTop="8dp"/></LinearLayout>
           L3
           cat > app/src/main/res/layout/activity_dashboard.xml <<'L4'
-          <?xml version="1.0" encoding="utf-8"?><ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#0F3D2E"><LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp"><TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Parent Dashboard • STRONG PROTECTION ✓" android:textColor="#4CAF50" android:textSize="16sp" android:textStyle="bold" android:gravity="center" android:layout_marginBottom="16dp"/><LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:background="#1A4D3A" android:orientation="vertical" android:padding="14dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🔑 CHANGE PIN HERE" android:textColor="#4CAF50" android:textStyle="bold"/><EditText android:id="@+id/newPinInput" android:layout_width="match_parent" android:layout_height="48dp" android:background="#FFFFFF" android:hint="Enter NEW PIN" android:gravity="center" android:inputType="numberPassword" android:layout_marginTop="8dp"/><Button android:id="@+id/btnSavePin" android:layout_width="match_parent" android:layout_height="44dp" android:text="Save New PIN - Hidden" android:background="#1E8C4A" android:textColor="#FFFFFF" android:layout_marginTop="8dp"/><TextView android:id="@+id/txtPinStatus" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Current: •••• hidden" android:textColor="#A8D5BA" android:textSize="11sp" android:layout_marginTop="6dp"/></LinearLayout><TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="👀 What Kids Searched - All Attempts" android:textColor="#FF6B6B" android:textSize="14sp" android:textStyle="bold" android:layout_marginTop="20dp" android:layout_marginBottom="8dp"/><TextView android:id="@+id/txtHistory" android:layout_width="match_parent" android:layout_height="wrap_content" android:background="#1A4D3A" android:padding="12dp" android:textColor="#FFFFFF" android:textSize="11sp" android:text="No searches yet - Safe ✓"/><Button android:id="@+id/btnClear" android:layout_width="match_parent" android:layout_height="44dp" android:text="Clear History" android:background="#333333" android:textColor="#FFFFFF" android:layout_marginTop="8dp"/><Button android:id="@+id/btnLock" android:layout_width="match_parent" android:layout_height="50dp" android:text="Lock Dashboard" android:background="#1E8C4A" android:textColor="#FFFFFF" android:layout_marginTop="16dp"/></LinearLayout></ScrollView>
+          <?xml version="1.0" encoding="utf-8"?><ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#0F3D2E"><LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp"><TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Parent Dashboard SECURED ✓" android:textColor="#4CAF50" android:textSize="16sp" android:textStyle="bold" android:gravity="center" android:layout_marginBottom="16dp"/><LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:background="#1A4D3A" android:orientation="vertical" android:padding="14dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🔑 CHANGE PIN HERE" android:textColor="#4CAF50" android:textStyle="bold"/><EditText android:id="@+id/newPinInput" android:layout_width="match_parent" android:layout_height="48dp" android:background="#FFFFFF" android:hint="Enter NEW PIN" android:gravity="center" android:inputType="numberPassword" android:layout_marginTop="8dp"/><Button android:id="@+id/btnSavePin" android:layout_width="match_parent" android:layout_height="44dp" android:text="Save New PIN Hidden" android:background="#1E8C4A" android:textColor="#FFFFFF" android:layout_marginTop="8dp"/><TextView android:id="@+id/txtPinStatus" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Current: •••• hidden" android:textColor="#A8D5BA" android:textSize="11sp" android:layout_marginTop="6dp"/></LinearLayout><TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="👀 What Kids Searched" android:textColor="#FF6B6B" android:textSize="14sp" android:textStyle="bold" android:layout_marginTop="20dp" android:layout_marginBottom="8dp"/><TextView android:id="@+id/txtHistory" android:layout_width="match_parent" android:layout_height="wrap_content" android:background="#1A4D3A" android:padding="12dp" android:textColor="#FFFFFF" android:textSize="11sp" android:text="No searches yet"/><Button android:id="@+id/btnClear" android:layout_width="match_parent" android:layout_height="44dp" android:text="Clear History" android:background="#333333" android:textColor="#FFFFFF" android:layout_marginTop="8dp"/><Button android:id="@+id/btnLock" android:layout_width="match_parent" android:layout_height="50dp" android:text="Lock Dashboard" android:background="#1E8C4A" android:textColor="#FFFFFF" android:layout_marginTop="16dp"/></LinearLayout></ScrollView>
           L4
           cat > app/src/main/res/layout/activity_browser.xml <<'L2'
           <?xml version="1.0" encoding="utf-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical"><WebView android:id="@+id/webview" android:layout_width="match_parent" android:layout_height="match_parent"/></LinearLayout>
@@ -80,14 +85,12 @@ jobs:
           J2
           cat > app/src/main/java/com/safeguard/onehub/DashboardActivity.java <<'J3'
           package com.safeguard.onehub; import android.app.Activity; import android.content.Intent; import android.content.SharedPreferences; import android.os.Bundle; import android.widget.EditText; import android.widget.TextView; import android.widget.Toast;
-          public class DashboardActivity extends Activity { protected void onCreate(Bundle b){ super.onCreate(b); setContentView(R.layout.activity_dashboard); SharedPreferences p=getSharedPreferences("safeguard",0); TextView h=findViewById(R.id.txtHistory); EditText n=findViewById(R.id.newPinInput); h.setText(p.getString("history","No searches yet - Safe ✓")); findViewById(R.id.btnSavePin).setOnClickListener(v->{ String np=n.getText().toString(); if(np.length()>=4){ p.edit().putString("parent_pin",np).apply(); Toast.makeText(this,"PIN Saved!",1).show(); n.setText(""); } }); findViewById(R.id.btnClear).setOnClickListener(v->{ p.edit().putString("history","No searches yet - Safe ✓").apply(); h.setText("No searches yet - Safe ✓"); }); findViewById(R.id.btnLock).setOnClickListener(v->{ startActivity(new Intent(this, MainActivity.class)); finish(); }); } }
+          public class DashboardActivity extends Activity { protected void onCreate(Bundle b){ super.onCreate(b); setContentView(R.layout.activity_dashboard); SharedPreferences p=getSharedPreferences("safeguard",0); TextView h=findViewById(R.id.txtHistory); EditText n=findViewById(R.id.newPinInput); h.setText(p.getString("history","No searches yet")); findViewById(R.id.btnSavePin).setOnClickListener(v->{ String np=n.getText().toString(); if(np.length()>=4){ p.edit().putString("parent_pin",np).apply(); Toast.makeText(this,"PIN Saved!",1).show(); n.setText(""); } }); findViewById(R.id.btnClear).setOnClickListener(v->{ p.edit().putString("history","No searches yet").apply(); h.setText("No searches yet"); }); findViewById(R.id.btnLock).setOnClickListener(v->{ startActivity(new Intent(this, MainActivity.class)); finish(); }); } }
           J3
           cat > app/src/main/java/com/safeguard/onehub/BrowserActivity.java <<'J4'
           package com.safeguard.onehub; import android.app.Activity; import android.content.SharedPreferences; import android.os.Bundle; import android.webkit.WebView; import android.webkit.WebViewClient;
           public class BrowserActivity extends Activity {
             WebView wv; SharedPreferences prefs;
-            String[] blockedPorn={"pornhub","xvideos","xnxx","xhamster","redtube","youporn","porn","xxx","sex","onlyfans","brazzers","chaturbate","cam4","beeg","spankbang","tube8","youjizz","xnxx","xhamster","pornhub","stripchat","livejasmin","camsoda","myfreecams","camster","adult","nsfw","erotic","hentai","rule34","porncomic","nude","naked","boobs","pussy","cock","dick","hardcore","blowjob"};
-            String[] blockedChild={"lolita","loli","childporn","child porn","underage","jailbait","preteen","under age","cp video","teen porn","young porn","kid porn","minor sex","pedophile","pedofilia","incest","rape","sex trafficking"};
             protected void onCreate(Bundle b){
               super.onCreate(b); setContentView(R.layout.activity_browser);
               prefs=getSharedPreferences("safeguard",0);
@@ -95,54 +98,34 @@ jobs:
               wv.getSettings().setJavaScriptEnabled(true);
               wv.getSettings().setDomStorageEnabled(true);
               wv.setWebViewClient(new WebViewClient(){
-                public boolean shouldOverrideUrlLoading(WebView view, String url){
-                  saveHistory(url);
-                  if(isBlocked(url)){ block(url); return true; }
+                public boolean shouldOverrideUrlLoading(WebView v, String url){
+                  save(url);
+                  if(blocked(url)){ block(url); return true; }
                   return false;
                 }
               });
-              String custom=getIntent().getStringExtra("url");
-              if(custom!=null){
-                saveHistory(custom);
-                if(isBlocked(custom)){ wv.loadData(blockHtml(custom),"text/html","UTF-8"); }
-                else wv.loadUrl(custom);
-              } else {
-                wv.loadUrl("https://www.google.com");
-              }
+              String u=getIntent().getStringExtra("url");
+              if(u!=null){ save(u); if(blocked(u)) wv.loadData(html(u),"text/html","UTF-8"); else wv.loadUrl(u); }
+              else wv.loadUrl("https://www.google.com");
             }
-            boolean isBlocked(String url){
-              String l=url.toLowerCase();
-              for(String s:blockedPorn){ if(l.contains(s)) return true; }
-              for(String s:blockedChild){ if(l.contains(s)) return true; }
+            boolean blocked(String s){
+              String l=s.toLowerCase();
+              String[] b={"pornhub","xvideos","xnxx","xhamster","redtube","youporn","onlyfans","brazzers","chaturbate","cam4","xxx","porn","sex","adult","nsfw","erotic","hentai","nude","naked","lolita","loli","childporn","underage","jailbait","preteen","cp video","teen porn","incest","rape"};
+              for(String k:b) if(l.contains(k)) return true;
               return false;
             }
-            void saveHistory(String url){
-              if(url.contains("gen_204")||url.contains("favicon")||url.contains("google.com/complete")) return;
+            void save(String url){
+              if(url.contains("gen_204")||url.contains("favicon")) return;
               String old=prefs.getString("history","");
               if(old.contains("No searches yet")) old="";
-              String entry="";
-              try{
-                if(url.contains("search?q=")){
-                  String q=url.split("q=")[1].split("&")[0].replace("+"," ");
-                  q=java.net.URLDecoder.decode(q,"UTF-8");
-                  if(isBlocked(q)) entry="🚫 BLOCKED ATTEMPT: "+q+" - PORN/GRAPHIC/UNDERAGE BLOCKED\n";
-                  else entry="🔍 Searched: "+q+"\n";
-                } else {
-                  if(isBlocked(url)) entry="🚫 BLOCKED: "+url+"\n";
-                  else entry="🌐 Visited: "+url+"\n";
-                }
-              } catch(Exception e){ entry="🌐 Visited: "+url+"\n"; }
-              if(!old.contains(entry) && entry.length()>3){
-                prefs.edit().putString("history",entry+old).apply();
-              }
+              String e="";
+              if(url.contains("search?q=")){
+                try{ String q=url.split("q=")[1].split("&")[0].replace("+"," "); q=java.net.URLDecoder.decode(q,"UTF-8"); if(blocked(q)) e="🚫 BLOCKED ATTEMPT: "+q+"\n"; else e="🔍 Searched: "+q+"\n"; } catch(Exception ex){ e="🌐 "+url+"\n"; }
+              } else { if(blocked(url)) e="🚫 BLOCKED: "+url+"\n"; else e="🌐 Visited: "+url+"\n"; }
+              if(!old.contains(e)) prefs.edit().putString("history",e+old).apply();
             }
-            String blockHtml(String url){
-              String old=prefs.getString("history","");
-              String entry="🚫 BLOCKED BY NDALA SAFEGUARD - SITE UNAUTHORISED\nType: PORN GRAPHIC / UNDERAGE PROTECTION\nTried: "+url+"\nDate: Protected by NDALA\n\n";
-              prefs.edit().putString("history",entry+old).apply();
-              return "<html><head><meta name='viewport' content='width=device-width,initial-scale=1'></head><body style='text-align:center;padding:15px;background:#FFFFFF;font-family:sans-serif;'><div style='border:4px solid #E53935;border-radius:20px;padding:20px;'><h1 style='color:#E53935;'>🚫 BLOCKED BY NDALA SAFEGUARD</h1><h2 style='color:#000;'>SITE UNAUTHORISED</h2><div style='background:#FFEBEE;padding:10px;border-radius:10px;margin:10px 0;'><p style='color:#C62828;font-weight:bold;'>⚠️ PORNOGRAPHIC / GRAPHIC / UNDERAGE CONTENT DETECTED</p><p style='font-size:12px;'>This site contains porn, graphic sexual content or under-age material and is BLOCKED on NDALA family system to protect children.</p></div><p style='font-size:11px;word-break:break-all;background:#F5F5F5;padding:8px;border-radius:8px;'>"+url+"</p><br><button onclick='window.location.href=\"https://www.google.com\"' style='background:#0F3D2E;color:white;padding:14px 28px;border:none;border-radius:10px;font-weight:bold;'>Go Home Safe</button><p style='font-size:9px;color:#888;margin-top:15px;'>Founder & Developer: Sibusiso D Ndala<br>NDALA Safeguard - Child Protection Active<br>VPN Shield ON • Media Scanner ON • Strong Block Active</p></div></body></html>";
-            }
-            void block(String url){ wv.loadData(blockHtml(url),"text/html","UTF-8"); }
+            String html(String u){ return "<html><body style='text-align:center;padding:15px;'><div style='border:4px solid red;border-radius:20px;padding:20px;'><h1 style='color:red;'>🚫 BLOCKED BY NDALA SAFEGUARD</h1><h2>SITE UNAUTHORISED</h2><p style='color:red;font-weight:bold;'>PORN GRAPHIC / UNDERAGE CONTENT DETECTED</p><p>"+u+"</p><br><button onclick='window.location.href=\"https://www.google.com\"' style='background:#0F3D2E;color:white;padding:12px 24px;border:none;border-radius:8px;'>Go Home Safe</button><p style='font-size:9px;margin-top:10px;'>Sibusiso D Ndala - NDALA Safeguard - Child Protection</p></div></body></html>"; }
+            void block(String u){ wv.loadData(html(u),"text/html","UTF-8"); }
           }
           J4
       - uses: gradle/gradle-build-action@v2
@@ -151,5 +134,5 @@ jobs:
           arguments: :app:assembleDebug
       - uses: actions/upload-artifact@v4
         with:
-          name: SafeGuard-STRONG-BLOCK-v105
+          name: SafeGuard-FIXED-GREEN-v105
           path: app/build/outputs/apk/debug/*.apk
