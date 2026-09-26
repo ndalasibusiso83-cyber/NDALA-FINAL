@@ -9,68 +9,175 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: BUILD NDALA - PARENT SET PIN - NO DEFAULT
+      - name: BUILD NDALA - PARENT SET PIN - NO DEFAULT FIXED
         run: |
           cat > settings.gradle <<'EOF'
-          pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }
-          dependencyResolutionManagement { repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS) repositories { google(); mavenCentral() } }
+          pluginManagement {
+              repositories {
+                  google()
+                  mavenCentral()
+                  gradlePluginPortal()
+              }
+          }
+          dependencyResolutionManagement {
+              repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+              repositories {
+                  google()
+                  mavenCentral()
+              }
+          }
           rootProject.name = "NDALA-FINAL"
           include ':app'
           EOF
+
           cat > build.gradle <<'EOF'
-          plugins { id 'com.android.application' version '8.2.2' apply false }
+          plugins {
+              id 'com.android.application' version '8.2.2' apply false
+          }
           EOF
+
           printf "org.gradle.jvmargs=-Xmx2048m\nandroid.useAndroidX=true\n" > gradle.properties
+
           cat > app/build.gradle <<'EOF'
-          plugins { id 'com.android.application' }
+          plugins {
+              id 'com.android.application'
+          }
           android {
               namespace 'com.ndala.secure'
               compileSdk 34
-              defaultConfig { applicationId "com.ndala.secure" minSdk 24 targetSdk 34 versionCode 4 versionName "4.0" }
-              buildTypes { release { minifyEnabled false } }
+              defaultConfig {
+                  applicationId "com.ndala.secure"
+                  minSdk 24
+                  targetSdk 34
+                  versionCode 4
+                  versionName "4.0"
+              }
+              buildTypes {
+                  release {
+                      minifyEnabled false
+                  }
+              }
           }
-          dependencies { implementation 'androidx.appcompat:appcompat:1.6.1' }
+          dependencies {
+              implementation 'androidx.appcompat:appcompat:1.6.1'
+          }
           EOF
 
           rm -rf app/src/main/res app/src/main/java/com
-          mkdir -p app/src/main/res/layout app/src/main/res/values app/src/main/res/drawable
+          mkdir -p app/src/main/res/layout
+          mkdir -p app/src/main/res/values
+          mkdir -p app/src/main/res/drawable
           mkdir -p app/src/main/java/com/ndala/secure
 
           cat > app/src/main/res/values/colors.xml <<'EOF'
-          <?xml version="1.0" encoding="utf-8"?><resources><color name="black">#000000</color><color name="white">#FFFFFF</color><color name="gold">#FFC107</color><color name="gray">#333333</color><color name="dark_gray">#1A1A1A</color></resources>
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+              <color name="black">#000000</color>
+              <color name="white">#FFFFFF</color>
+              <color name="gold">#FFC107</color>
+              <color name="gray">#333333</color>
+              <color name="dark_gray">#1A1A1A</color>
+          </resources>
           EOF
+
           cat > app/src/main/res/values/strings.xml <<'EOF'
-          <?xml version="1.0" encoding="utf-8"?><resources><string name="app_name">NDALA SECURE</string></resources>
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+              <string name="app_name">NDALA SECURE</string>
+          </resources>
           EOF
+
           cat > app/src/main/res/values/styles.xml <<'EOF'
-          <?xml version="1.0" encoding="utf-8"?><resources><style name="PinButton"><item name="android:layout_width">88dp</item><item name="android:layout_height">88dp</item><item name="android:layout_margin">8dp</item><item name="android:background">@drawable/btn_circle</item><item name="android:textColor">#FFFFFF</item><item name="android:textSize">28sp</item><item name="android:textStyle">bold</item></style></resources>
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+              <style name="PinButton">
+                  <item name="android:layout_width">88dp</item>
+                  <item name="android:layout_height">88dp</item>
+                  <item name="android:layout_margin">8dp</item>
+                  <item name="android:background">@drawable/btn_circle</item>
+                  <item name="android:textColor">#FFFFFF</item>
+                  <item name="android:textSize">28sp</item>
+                  <item name="android:textStyle">bold</item>
+              </style>
+          </resources>
           EOF
+
           cat > app/src/main/res/drawable/btn_circle.xml <<'EOF'
-          <?xml version="1.0" encoding="utf-8"?><selector xmlns:android="http://schemas.android.com/apk/res/android"><item android:state_pressed="true"><shape android:shape="oval"><solid android:color="#FFC107"/></shape></item><item><shape android:shape="oval"><solid android:color="#1A1A1A"/><stroke android:width="1dp" android:color="#333333"/></shape></item></selector>
+          <?xml version="1.0" encoding="utf-8"?>
+          <selector xmlns:android="http://schemas.android.com/apk/res/android">
+              <item android:state_pressed="true">
+                  <shape android:shape="oval"><solid android:color="#FFC107"/></shape>
+              </item>
+              <item>
+                  <shape android:shape="oval"><solid android:color="#1A1A1A"/><stroke android:width="1dp" android:color="#333333"/></shape>
+              </item>
+          </selector>
           EOF
+
           cat > app/src/main/res/drawable/dot_empty.xml <<'EOF'
-          <?xml version="1.0" encoding="utf-8"?><shape android:shape="oval"><solid android:color="#000000"/><stroke android:width="2dp" android:color="#333333"/><size android:width="20dp" android:height="20dp"/></shape>
+          <?xml version="1.0" encoding="utf-8"?>
+          <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
+              <solid android:color="#000000"/>
+              <stroke android:width="2dp" android:color="#333333"/>
+              <size android:width="20dp" android:height="20dp"/>
+          </shape>
           EOF
+
           cat > app/src/main/res/drawable/dot_filled.xml <<'EOF'
-          <?xml version="1.0" encoding="utf-8"?><shape android:shape="oval"><solid android:color="#FFC107"/><size android:width="20dp" android:height="20dp"/></shape>
+          <?xml version="1.0" encoding="utf-8"?>
+          <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
+              <solid android:color="#FFC107"/>
+              <size android:width="20dp" android:height="20dp"/>
+          </shape>
           EOF
+
           cat > app/src/main/res/drawable/card_bg.xml <<'EOF'
-          <?xml version="1.0" encoding="utf-8"?><shape android:shape="rectangle"><solid android:color="#1A1A1A"/><corners android:radius="16dp"/><stroke android:width="1dp" android:color="#333333"/></shape>
+          <?xml version="1.0" encoding="utf-8"?>
+          <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+              <solid android:color="#1A1A1A"/>
+              <corners android:radius="16dp"/>
+              <stroke android:width="1dp" android:color="#333333"/>
+          </shape>
           EOF
 
           cat > app/src/main/res/layout/activity_main.xml <<'EOF'
           <?xml version="1.0" encoding="utf-8"?>
-          <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#000000" android:orientation="vertical" android:gravity="center_horizontal" android:padding="24dp">
+          <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#000000"
+              android:orientation="vertical"
+              android:gravity="center_horizontal"
+              android:padding="24dp">
               <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="NDALA SECURE" android:textColor="#FFC107" android:textSize="28sp" android:textStyle="bold" android:layout_marginTop="60dp"/>
               <TextView android:id="@+id/titleText" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Enter Your PIN" android:textColor="#FFFFFF" android:textSize="16sp" android:layout_marginTop="12dp" android:alpha="0.7"/>
               <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="40dp" android:layout_marginBottom="50dp">
-                  <View android:id="@+id/dot1" android:layout_width="20dp" android:layout_height="20dp" android:background="@drawable/dot_empty" android:layout_margin="12dp"/><View android:id="@+id/dot2" android:layout_width="20dp" android:layout_height="20dp" android:background="@drawable/dot_empty" android:layout_margin="12dp"/><View android:id="@+id/dot3" android:layout_width="20dp" android:layout_height="20dp" android:background="@drawable/dot_empty" android:layout_margin="12dp"/><View android:id="@+id/dot4" android:layout_width="20dp" android:layout_height="20dp" android:background="@drawable/dot_empty" android:layout_margin="12dp"/>
+                  <View android:id="@+id/dot1" android:layout_width="20dp" android:layout_height="20dp" android:background="@drawable/dot_empty" android:layout_margin="12dp"/>
+                  <View android:id="@+id/dot2" android:layout_width="20dp" android:layout_height="20dp" android:background="@drawable/dot_empty" android:layout_margin="12dp"/>
+                  <View android:id="@+id/dot3" android:layout_width="20dp" android:layout_height="20dp" android:background="@drawable/dot_empty" android:layout_margin="12dp"/>
+                  <View android:id="@+id/dot4" android:layout_width="20dp" android:layout_height="20dp" android:background="@drawable/dot_empty" android:layout_margin="12dp"/>
               </LinearLayout>
               <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center">
-                  <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal"><Button android:id="@+id/btn1" style="@style/PinButton" android:text="1"/><Button android:id="@+id/btn2" style="@style/PinButton" android:text="2"/><Button android:id="@+id/btn3" style="@style/PinButton" android:text="3"/></LinearLayout>
-                  <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal"><Button android:id="@+id/btn4" style="@style/PinButton" android:text="4"/><Button android:id="@+id/btn5" style="@style/PinButton" android:text="5"/><Button android:id="@+id/btn6" style="@style/PinButton" android:text="6"/></LinearLayout>
-                  <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal"><Button android:id="@+id/btn7" style="@style/PinButton" android:text="7"/><Button android:id="@+id/btn8" style="@style/PinButton" android:text="8"/><Button android:id="@+id/btn9" style="@style/PinButton" android:text="9"/></LinearLayout>
-                  <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal"><View android:layout_width="88dp" android:layout_height="88dp" android:layout_margin="8dp"/><Button android:id="@+id/btn0" style="@style/PinButton" android:text="0"/><Button android:id="@+id/btnDel" style="@style/PinButton" android:text="⌫" android:textSize="22sp"/></LinearLayout>
+                  <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
+                      <Button android:id="@+id/btn1" style="@style/PinButton" android:text="1"/>
+                      <Button android:id="@+id/btn2" style="@style/PinButton" android:text="2"/>
+                      <Button android:id="@+id/btn3" style="@style/PinButton" android:text="3"/>
+                  </LinearLayout>
+                  <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
+                      <Button android:id="@+id/btn4" style="@style/PinButton" android:text="4"/>
+                      <Button android:id="@+id/btn5" style="@style/PinButton" android:text="5"/>
+                      <Button android:id="@+id/btn6" style="@style/PinButton" android:text="6"/>
+                  </LinearLayout>
+                  <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
+                      <Button android:id="@+id/btn7" style="@style/PinButton" android:text="7"/>
+                      <Button android:id="@+id/btn8" style="@style/PinButton" android:text="8"/>
+                      <Button android:id="@+id/btn9" style="@style/PinButton" android:text="9"/>
+                  </LinearLayout>
+                  <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
+                      <View android:layout_width="88dp" android:layout_height="88dp" android:layout_margin="8dp"/>
+                      <Button android:id="@+id/btn0" style="@style/PinButton" android:text="0"/>
+                      <Button android:id="@+id/btnDel" style="@style/PinButton" android:text="⌫" android:textSize="22sp"/>
+                  </LinearLayout>
               </LinearLayout>
               <TextView android:id="@+id/statusText" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Kids cannot access dashboard" android:textColor="#888888" android:textSize="13sp" android:layout_marginTop="30dp" android:gravity="center"/>
           </LinearLayout>
@@ -78,127 +185,34 @@ jobs:
 
           cat > app/src/main/res/layout/activity_vault.xml <<'EOF'
           <?xml version="1.0" encoding="utf-8"?>
-          <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#000000" android:orientation="vertical" android:padding="24dp">
+          <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#000000"
+              android:orientation="vertical"
+              android:padding="24dp">
               <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="PARENT DASHBOARD" android:textColor="#FFC107" android:textSize="24sp" android:textStyle="bold" android:layout_marginTop="40dp"/>
               <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="✓ SECURED - Only parents can see this" android:textColor="#4CAF50" android:textSize="13sp" android:layout_marginTop="8dp"/>
-              <LinearLayout android:layout_width="match_parent" android:layout_height="90dp" android:background="@drawable/card_bg" android:orientation="horizontal" android:gravity="center_vertical" android:padding="16dp" android:layout_marginTop="32dp"><TextView android:layout_width="50dp" android:layout_height="50dp" android:text="👨‍👩‍👧" android:textSize="28sp" android:gravity="center" android:background="@drawable/btn_circle"/><LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginLeft="16dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Safeguard Controls" android:textColor="#FFFFFF" android:textSize="16sp" android:textStyle="bold"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Manage kids protection" android:textColor="#888888" android:textSize="12sp"/></LinearLayout></LinearLayout>
+              <LinearLayout android:layout_width="match_parent" android:layout_height="90dp" android:background="@drawable/card_bg" android:orientation="horizontal" android:gravity="center_vertical" android:padding="16dp" android:layout_marginTop="32dp">
+                  <TextView android:layout_width="50dp" android:layout_height="50dp" android:text="👨‍👩‍👧" android:textSize="28sp" android:gravity="center" android:background="@drawable/btn_circle"/>
+                  <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginLeft="16dp">
+                      <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Safeguard Controls" android:textColor="#FFFFFF" android:textSize="16sp" android:textStyle="bold"/>
+                      <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Manage kids protection" android:textColor="#888888" android:textSize="12sp"/>
+                  </LinearLayout>
+              </LinearLayout>
               <Button android:id="@+id/btnChangePin" android:layout_width="match_parent" android:layout_height="56dp" android:text="Change PIN 🔑" android:textColor="#000000" android:backgroundTint="#FFC107" android:layout_marginTop="24dp" android:textStyle="bold"/>
               <Button android:id="@+id/btnLock" android:layout_width="match_parent" android:layout_height="56dp" android:text="Lock Dashboard 🔒" android:textColor="#FFFFFF" android:backgroundTint="#333333" android:layout_marginTop="12dp"/>
           </LinearLayout>
           EOF
 
           cat > app/src/main/AndroidManifest.xml <<'EOF'
-          <?xml version="1.0" encoding="utf-8"?><manifest xmlns:android="http://schemas.android.com/apk/res/android"><application android:label="NDALA SECURE" android:theme="@android:style/Theme.Black.NoTitleBar"><activity android:name=".MainActivity" android:exported="true"><intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter></activity><activity android:name=".VaultActivity" android:exported="false"/></application></manifest>
-          EOF
-
-          cat > app/src/main/java/com/ndala/secure/MainActivity.java <<'EOF'
-          package com.ndala.secure;
-          import android.app.Activity;
-          import android.content.Intent;
-          import android.content.SharedPreferences;
-          import android.os.Bundle;
-          import android.view.View;
-          import android.widget.Button;
-          import android.widget.TextView;
-          public class MainActivity extends Activity {
-              private StringBuilder pin = new StringBuilder();
-              private StringBuilder firstPin = new StringBuilder();
-              private View dot1, dot2, dot3, dot4;
-              private TextView status, title;
-              private boolean isCreating = false;
-              private boolean isConfirming = false;
-              private SharedPreferences prefs;
-              protected void onCreate(Bundle b) {
-                  super.onCreate(b);
-                  setContentView(R.layout.activity_main);
-                  prefs = getSharedPreferences("ndala_secure", MODE_PRIVATE);
-                  dot1 = findViewById(R.id.dot1); dot2 = findViewById(R.id.dot2); dot3 = findViewById(R.id.dot3); dot4 = findViewById(R.id.dot4);
-                  status = findViewById(R.id.statusText); title = findViewById(R.id.titleText);
-
-                  // CHECK IF PIN EXISTS - NO DEFAULT!
-                  String savedPin = prefs.getString("parent_pin", null);
-                  if (savedPin == null) {
-                      isCreating = true;
-                      title.setText("Create Parent PIN");
-                      status.setText("Set a secret PIN only parents know");
-                  } else {
-                      title.setText("Enter Your PIN");
-                      status.setText("Kids cannot access dashboard");
-                  }
-
-                  int[] btnIds = {R.id.btn0,R.id.btn1,R.id.btn2,R.id.btn3,R.id.btn4,R.id.btn5,R.id.btn6,R.id.btn7,R.id.btn8,R.id.btn9};
-                  for (int id : btnIds) {
-                      findViewById(id).setOnClickListener(v -> {
-                          if (pin.length() < 4) {
-                              pin.append(((Button) v).getText().toString());
-                              updateDots();
-                              if (pin.length() == 4) handlePinComplete();
-                          }
-                      });
-                  }
-                  findViewById(R.id.btnDel).setOnClickListener(v -> { if (pin.length() > 0) { pin.deleteCharAt(pin.length()-1); updateDots(); } });
-              }
-              private void updateDots() {
-                  View[] dots = {dot1, dot2, dot3, dot4};
-                  for (int i = 0; i < 4; i++) dots[i].setBackgroundResource(i < pin.length()? R.drawable.dot_filled : R.drawable.dot_empty);
-              }
-              private void handlePinComplete() {
-                  String savedPin = prefs.getString("parent_pin", null);
-                  if (isCreating &&!isConfirming) {
-                      firstPin = new StringBuilder(pin.toString());
-                      pin.setLength(0); updateDots();
-                      isConfirming = true;
-                      title.setText("Confirm Your PIN");
-                      status.setText("Enter same PIN again");
-                  } else if (isCreating && isConfirming) {
-                      if (pin.toString().equals(firstPin.toString())) {
-                          prefs.edit().putString("parent_pin", pin.toString()).apply();
-                          status.setText("✓ PIN Saved!");
-                          startActivity(new Intent(this, VaultActivity.class)); finish();
-                      } else {
-                          status.setText("✗ PINs don't match - Try again");
-                          pin.setLength(0); firstPin.setLength(0); isConfirming = false;
-                          title.setText("Create Parent PIN"); updateDots();
-                          status.postDelayed(() -> status.setText("Set a secret PIN only parents know"), 1500);
-                      }
-                  } else {
-                      if (pin.toString().equals(savedPin)) {
-                          startActivity(new Intent(this, VaultActivity.class));
-                          pin.setLength(0); updateDots();
-                      } else {
-                          status.setText("✗ Wrong PIN - Try again");
-                          pin.setLength(0); updateDots();
-                          status.postDelayed(() -> status.setText("Kids cannot access dashboard"), 1500);
-                      }
-                  }
-              }
-          }
-          EOF
-
-          cat > app/src/main/java/com/ndala/secure/VaultActivity.java <<'EOF'
-          package com.ndala.secure;
-          import android.app.Activity;
-          import android.content.Intent;
-          import android.os.Bundle;
-          public class VaultActivity extends Activity {
-              protected void onCreate(Bundle b) {
-                  super.onCreate(b);
-                  setContentView(R.layout.activity_vault);
-                  findViewById(R.id.btnLock).setOnClickListener(v -> { startActivity(new Intent(this, MainActivity.class)); finish(); });
-                  findViewById(R.id.btnChangePin).setOnClickListener(v -> {
-                      getSharedPreferences("ndala_secure", MODE_PRIVATE).edit().remove("parent_pin").apply();
-                      startActivity(new Intent(this, MainActivity.class)); finish();
-                  });
-              }
-          }
-          EOF
-      - name: Build APK
-        uses: gradle/gradle-build-action@v2
-        with:
-          gradle-version: 8.5
-          arguments: :app:assembleDebug
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: NDALA-PARENT-PIN-NO-DEFAULT
-          path: app/build/outputs/apk/debug/*.apk
+          <?xml version="1.0" encoding="utf-8"?>
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+              <application android:label="NDALA SECURE" android:theme="@android:style/Theme.Black.NoTitleBar">
+                  <activity android:name=".MainActivity" android:exported="true">
+                      <intent-filter>
+                          <action android:name="android.intent.action.MAIN"/>
+                          <category android:name="android.intent.category.LAUNCHER"/>
+                      </intent-filter>
+                  </activity>
+                  <activity android
