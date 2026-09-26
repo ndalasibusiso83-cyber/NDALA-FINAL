@@ -9,7 +9,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: FIX PACKAGE NAME - final is Java keyword
+      - name: BUILD REAL NDALA SECURE PIN - 4 DOT + KEYPAD
         run: |
           cat > settings.gradle <<'EOF'
           pluginManagement {
@@ -26,8 +26,6 @@ jobs:
           plugins { id 'com.android.application' version '8.2.2' apply false }
           EOF
           printf "org.gradle.jvmargs=-Xmx2048m\nandroid.useAndroidX=true\n" > gradle.properties
-          
-          # FIX: com.ndala.secure is valid - com.ndala.final is NOT valid
           cat > app/build.gradle <<'EOF'
           plugins { id 'com.android.application' }
           android {
@@ -37,8 +35,8 @@ jobs:
                   applicationId "com.ndala.secure"
                   minSdk 24
                   targetSdk 34
-                  versionCode 1
-                  versionName "1.0"
+                  versionCode 2
+                  versionName "2.0"
               }
               buildTypes { release { minifyEnabled false } }
           }
@@ -47,61 +45,43 @@ jobs:
           }
           EOF
           
-          rm -rf app/src/main/res
-          mkdir -p app/src/main/res/layout
+          rm -rf app/src/main/res app/src/main/java/com
+          mkdir -p app/src/main/res/layout app/src/main/res/values
+          mkdir -p app/src/main/java/com/ndala/secure
+          
+          cat > app/src/main/res/values/colors.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+              <color name="black">#000000</color>
+              <color name="white">#FFFFFF</color>
+              <color name="gold">#FFC107</color>
+              <color name="gray">#333333</color>
+              <color name="dark_gray">#1A1A1A</color>
+          </resources>
+          EOF
+          
+          cat > app/src/main/res/values/strings.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+              <string name="app_name">NDALA SECURE</string>
+          </resources>
+          EOF
+
           cat > app/src/main/res/layout/activity_main.xml <<'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="#000000"
               android:orientation="vertical"
-              android:gravity="center"
-              android:background="#000000">
+              android:gravity="center_horizontal"
+              android:padding="24dp">
+
               <TextView
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
-                  android:text="NDALA SECURE PIN - BUILD SUCCESS!"
-                  android:textColor="#FFFFFF"
-                  android:textSize="22sp"
-                  android:padding="24dp" />
-          </LinearLayout>
-          EOF
-          
-          mkdir -p app/src/main
-          cat > app/src/main/AndroidManifest.xml <<'EOF'
-          <?xml version="1.0" encoding="utf-8"?>
-          <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-              <application android:label="NDALA SECURE" android:theme="@android:style/Theme.Black.NoTitleBar">
-                  <activity android:name=".MainActivity" android:exported="true">
-                      <intent-filter>
-                          <action android:name="android.intent.action.MAIN"/>
-                          <category android:name="android.intent.category.LAUNCHER"/>
-                      </intent-filter>
-                  </activity>
-              </application>
-          </manifest>
-          EOF
-          
-          rm -rf app/src/main/java/com
-          mkdir -p app/src/main/java/com/ndala/secure
-          cat > app/src/main/java/com/ndala/secure/MainActivity.java <<'EOF'
-          package com.ndala.secure;
-          import android.app.Activity;
-          import android.os.Bundle;
-          public class MainActivity extends Activity {
-              protected void onCreate(Bundle b){
-                  super.onCreate(b);
-                  setContentView(R.layout.activity_main);
-              }
-          }
-          EOF
-      - name: Build APK
-        uses: gradle/gradle-build-action@v2
-        with:
-          gradle-version: 8.5
-          arguments: :app:assembleDebug
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: NDALA-SECURE-PIN-APK
-          path: app/build/outputs/apk/debug/*.apk
+                  android:text="NDALA SECURE"
+                  android:textColor="#FFC107"
+                  android:textSize="28sp"
+                  android:textStyle="bold"
+                  android
