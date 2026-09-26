@@ -10,21 +10,29 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Find and build
+      - name: Restore Gradle Wrapper
         run: |
-          echo "=== Checking files ==="
           ls -la
-          ls -la app/ || true
-          find . -name "gradlew" -type f
-          chmod +x ./gradlew || true
-          chmod +x gradlew || true
-          chmod +x app/gradlew || true
-          if [ -f ./gradlew ]; then ./gradlew assembleDebug; elif [ -f app/gradlew ]; then cd app && ./gradlew assembleDebug; else gradle assembleDebug; fi
+          if [ ! -f "./gradlew" ]; then
+            echo "gradlew missing - creating temporary wrapper"
+            echo "rootProject.name = 'NDALA'" > settings.gradle
+            echo "include ':app'" >> settings.gradle
+            cat settings.gradle
+            ls -la app/
+          fi
+          chmod +x ./gradlew 2>/dev/null || true
+          chmod +x app/gradlew 2>/dev/null || true
+      - name: Build with Gradle Action
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: |
+            ${{ hashFiles('**/gradlew') != '' && './gradlew' || 'gradle' }} assembleDebug --stacktrace
+          build-root-directory: .
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: NDALA-SECURE-PIN-FINAL
           path: |
             app/build/outputs/apk/debug/*.apk
-            app/app/build/outputs/apk/debug/*.apk
             **/build/outputs/apk/debug/*.apk
+            build/outputs/apk/debug/*.apk
