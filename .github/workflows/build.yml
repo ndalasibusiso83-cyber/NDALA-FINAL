@@ -10,11 +10,32 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Auto-Create Missing Gradle Files
+      - name: Auto-Create Proper Gradle Files
         run: |
-          echo "include ':app'" > settings.gradle
-          echo 'rootProject.name = "NDALA-FINAL"' >> settings.gradle
-          echo "buildscript { repositories { google(); mavenCentral() } dependencies { classpath 'com.android.tools.build:gradle:8.2.2' } } allprojects { repositories { google(); mavenCentral() } }" > build.gradle
+          cat > settings.gradle <<'EOF'
+          pluginManagement {
+              repositories {
+                  google()
+                  mavenCentral()
+                  gradlePluginPortal()
+              }
+          }
+          dependencyResolutionManagement {
+              repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+              repositories {
+                  google()
+                  mavenCentral()
+              }
+          }
+          rootProject.name = "NDALA-FINAL"
+          include ':app'
+          EOF
+          cat > build.gradle <<'EOF'
+          plugins {
+              id 'com.android.application' version '8.2.2' apply false
+              id 'org.jetbrains.kotlin.android' version '1.9.10' apply false
+          }
+          EOF
           echo "org.gradle.jvmargs=-Xmx2048m" > gradle.properties
           echo "android.useAndroidX=true" >> gradle.properties
           mkdir -p gradle/wrapper
@@ -23,9 +44,6 @@ jobs:
           echo "distributionUrl=https\://services.gradle.org/distributions/gradle-8.5-bin.zip" >> gradle/wrapper/gradle-wrapper.properties
           echo "zipStoreBase=GRADLE_USER_HOME" >> gradle/wrapper/gradle-wrapper.properties
           echo "zipStorePath=wrapper/dists" >> gradle/wrapper/gradle-wrapper.properties
-          echo "#!/usr/bin/env sh" > gradlew
-          echo 'exec gradle "$@"' >> gradlew
-          chmod +x gradlew
           ls -la
       - name: Build APK
         uses: gradle/gradle-build-action@v2
