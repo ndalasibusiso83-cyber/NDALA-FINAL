@@ -1,4 +1,4 @@
-name: Build SafeGuard ONLY LAYOUT 111 GREEN
+name: Build v105 ORIGINAL LAYOUT LIKE PHOTO 113
 on: push
 jobs:
   build:
@@ -7,93 +7,71 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v3
         with:
-          java-version: '17'
           distribution: 'temurin'
-      - name: CLEAN ALL OLD BAD FILES
+          java-version: '17'
+      - name: DELETE ALL OLD
+        run: rm -rf app build .gradle gradle gradlew settings.gradle build.gradle
+      - name: CREATE v105 ORIGINAL LAYOUT
         run: |
-          rm -rf app/src app/build.gradle build gradle
-          rm -rf app/src/main/res/drawable/*
-          rm -rf app/build.gradle
-          echo "Cleaned all old files - rounded_white.xml deleted"
-      - name: BUILD ONLY LAYOUT LIKE PHOTO
-        run: |
-          mkdir -p app/src/main/java/com/safeguard/onehub
-          mkdir -p app/src/main/res/layout
-          mkdir -p app/src/main/res/values
-          mkdir -p app/src/main/res/drawable
-
-          cat > settings.gradle <<'SET'
-          pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }
-          dependencyResolutionManagement { repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS); repositories { google(); mavenCentral() } }
-          rootProject.name = "SafeGuard-ONLY-111"; include ':app'
-          SET
-          echo "plugins { id 'com.android.application' version '8.2.2' apply false }" > build.gradle
-          printf "org.gradle.jvmargs=-Xmx2048m\nandroid.useAndroidX=true\n" > gradle.properties
-
-          cat > app/build.gradle <<'APP'
+          mkdir -p app/src/main/java/com/safeguard/onehub app/src/main/res/layout app/src/main/res/values app/src/main/res/drawable
+          cat > settings.gradle <<'EOF'
+          include ':app'
+          EOF
+          cat > build.gradle <<'EOF'
+          plugins { id 'com.android.application' version '8.2.2' apply false }
+          EOF
+          cat > gradle.properties <<'EOF'
+          org.gradle.jvmargs=-Xmx2048m
+          android.useAndroidX=true
+          EOF
+          cat > app/build.gradle <<'EOF'
           plugins { id 'com.android.application' }
-          android {
-              namespace 'com.safeguard.onehub'
-              compileSdk 34
-              defaultConfig {
-                  applicationId "com.safeguard.onehub"
-                  minSdk 24
-                  targetSdk 34
-                  versionCode 111
-                  versionName "11.1-ONLY-LAYOUT-GREEN"
-              }
-          }
+          android { namespace 'com.safeguard.onehub' compileSdk 34 defaultConfig { applicationId "com.safeguard.onehub" minSdk 24 targetSdk 34 versionCode 113 versionName "11.3-ORIGINAL" } }
           dependencies { implementation 'androidx.appcompat:appcompat:1.6.1' }
-          APP
-
-          cat > app/src/main/res/values/strings.xml <<'STR'
+          EOF
+          cat > app/src/main/res/values/strings.xml <<'EOF'
           <resources><string name="app_name">SafeGuard One Hub</string></resources>
-          STR
-
-          cat > app/src/main/res/drawable/white_card.xml <<'D1'
-          <?xml version="1.0" encoding="utf-8"?><shape xmlns:android="http://schemas.android.com/apk/res/android"><solid android:color="#FFFFFF"/><corners android:radius="18dp"/><stroke android:width="1dp" android:color="#EEEEEE"/></shape>
-          D1
-          cat > app/src/main/res/drawable/green_card.xml <<'D2'
-          <?xml version="1.0" encoding="utf-8"?><shape xmlns:android="http://schemas.android.com/apk/res/android"><solid android:color="#0F3D2E"/><corners android:radius="18dp"/></shape>
-          D2
-          cat > app/src/main/res/drawable/green_border.xml <<'D3'
-          <?xml version="1.0" encoding="utf-8"?><shape xmlns:android="http://schemas.android.com/apk/res/android"><solid android:color="#FFFFFF"/><corners android:radius="18dp"/><stroke android:width="2dp" android:color="#0F3D2E"/></shape>
-          D3
-          cat > app/src/main/res/drawable/on_badge.xml <<'D4'
-          <?xml version="1.0" encoding="utf-8"?><shape xmlns:android="http://schemas.android.com/apk/res/android"><solid android:color="#1A7A3A"/><corners android:radius="12dp"/></shape>
-          D4
-
-          cat > app/src/main/AndroidManifest.xml <<'MAN'
+          EOF
+          cat > app/src/main/res/drawable/card.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?><shape xmlns:android="http://schemas.android.com/apk/res/android"><solid android:color="#FFFFFF"/><corners android:radius="16dp"/><stroke android:width="1dp" android:color="#E0E0E0"/></shape>
+          EOF
+          cat > app/src/main/res/drawable/green.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?><shape xmlns:android="http://schemas.android.com/apk/res/android"><solid android:color="#0F3D2E"/><corners android:radius="16dp"/></shape>
+          EOF
+          cat > app/src/main/res/drawable/green_border.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?><shape xmlns:android="http://schemas.android.com/apk/res/android"><solid android:color="#F6FFF8"/><corners android:radius="16dp"/><stroke android:width="2dp" android:color="#0F3D2E"/></shape>
+          EOF
+          cat > app/src/main/res/drawable/on.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?><shape xmlns:android="http://schemas.android.com/apk/res/android"><solid android:color="#1E8C4A"/><corners android:radius="12dp"/></shape>
+          EOF
+          cat > app/src/main/AndroidManifest.xml <<'EOF'
           <manifest xmlns:android="http://schemas.android.com/apk/res/android"><uses-permission android:name="android.permission.INTERNET"/><application android:label="SafeGuard One Hub" android:theme="@android:style/Theme.Light.NoTitleBar"><activity android:name=".MainActivity" android:exported="true"><intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter></activity><activity android:name=".BrowserActivity" android:exported="false"/><activity android:name=".PinActivity" android:exported="false"/><activity android:name=".DashboardActivity" android:exported="false"/></application></manifest>
-          MAN
-
-          cat > app/src/main/res/layout/activity_main.xml <<'L1'
-          <?xml version="1.0" encoding="utf-8"?><ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#F5F5F0"><LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp" android:gravity="center_horizontal"><TextView android:layout_width="62dp" android:layout_height="62dp" android:text="🛡️" android:textSize="36sp" android:gravity="center" android:background="@drawable/white_card" android:layout_marginTop="12dp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SafeGuard One Hub" android:textColor="#0F3D2E" android:textSize="22sp" android:textStyle="bold" android:layout_marginTop="10dp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Parental control &amp; safety dashboard" android:textColor="#777777" android:textSize="13sp" android:layout_marginBottom="22dp"/><LinearLayout android:id="@+id/btnSearch" android:layout_width="match_parent" android:layout_height="54dp" android:background="@drawable/white_card" android:gravity="center_vertical" android:padding="16dp" android:layout_marginBottom="12dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🔍 Safe Google Search" android:textColor="#888888" android:textSize="15sp"/></LinearLayout><LinearLayout android:layout_width="match_parent" android:layout_height="70dp" android:background="@drawable/white_card" android:gravity="center_vertical" android:padding="14dp" android:layout_marginBottom="12dp" android:orientation="horizontal"><TextView android:layout_width="44dp" android:layout_height="44dp" android:text="🔒" android:gravity="center" android:textSize="22sp"/><LinearLayout android:layout_width="0dp" android:layout_weight="1" android:orientation="vertical" android:layout_marginLeft="12dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="VPN Shield" android:textColor="#000000" android:textStyle="bold" android:textSize="15sp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Secure connection active • Protected" android:textColor="#777777" android:textSize="11sp"/></LinearLayout><TextView android:layout_width="50dp" android:layout_height="28dp" android:text="ON" android:gravity="center" android:background="@drawable/on_badge" android:textColor="#FFFFFF" android:textSize="12sp" android:textStyle="bold"/></LinearLayout><LinearLayout android:layout_width="match_parent" android:layout_height="70dp" android:background="@drawable/white_card" android:gravity="center_vertical" android:padding="14dp" android:layout_marginBottom="20dp" android:orientation="horizontal"><TextView android:layout_width="44dp" android:layout_height="44dp" android:text="🔍" android:gravity="center" android:textSize="22sp"/><LinearLayout android:layout_width="0dp" android:layout_weight="1" android:orientation="vertical" android:layout_marginLeft="12dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Media Scanner" android:textColor="#000000" android:textStyle="bold" android:textSize="15sp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Scanning photos &amp; messages • Safe" android:textColor="#777777" android:textSize="11sp"/></LinearLayout><TextView android:layout_width="50dp" android:layout_height="28dp" android:text="ON" android:gravity="center" android:background="@drawable/on_badge" android:textColor="#FFFFFF" android:textSize="12sp" android:textStyle="bold"/></LinearLayout><TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Family ID" android:textColor="#0F3D2E" android:textStyle="bold" android:textSize="16sp" android:layout_marginBottom="8dp"/><LinearLayout android:layout_width="match_parent" android:layout_height="74dp" android:background="@drawable/green_border" android:gravity="center_vertical" android:padding="16dp" android:layout_marginBottom="16dp" android:orientation="horizontal"><LinearLayout android:layout_width="0dp" android:layout_weight="1" android:orientation="vertical"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="NDALA" android:textColor="#000000" android:textStyle="bold" android:textSize="22sp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Family ID • Share with family devices" android:textColor="#888888" android:textSize="11sp"/></LinearLayout><TextView android:layout_width="40dp" android:layout_height="40dp" android:text="📋" android:textSize="26sp" android:gravity="center"/></LinearLayout><LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal"><TextView android:id="@+id/btnTestBlock" android:layout_width="0dp" android:layout_weight="1" android:layout_height="48dp" android:text="TEST BLOCK" android:gravity="center" android:background="@drawable/white_card" android:textColor="#0F3D2E" android:textStyle="bold" android:layout_marginRight="8dp"/><TextView android:id="@+id/btnParentDash" android:layout_width="0dp" android:layout_weight="1" android:layout_height="48dp" android:text="Parent Dashboard" android:gravity="center" android:background="@drawable/green_card" android:textColor="#FFFFFF" android:textStyle="bold" android:layout_marginLeft="8dp"/></LinearLayout><LinearLayout android:layout_width="match_parent" android:layout_height="84dp" android:background="@drawable/green_card" android:gravity="center" android:orientation="vertical" android:layout_marginTop="20dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Created by" android:textColor="#A8D5BA" android:textSize="11sp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Sibusiso D Ndala" android:textColor="#FFFFFF" android:textStyle="bold" android:textSize="18sp" android:layout_marginTop="2dp" android:layout_marginBottom="2dp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Founder &amp; Developer • NDALA Safeguard" android:textColor="#A8D5BA" android:textSize="10sp"/></LinearLayout></LinearLayout></ScrollView>
-          L1
-
-          cat > app/src/main/res/layout/activity_pin.xml <<'L3'
-          <?xml version="1.0" encoding="utf-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#0F3D2E" android:orientation="vertical" android:padding="24dp" android:gravity="center_horizontal"><TextView android:layout_width="60dp" android:layout_height="60dp" android:text="🔒" android:textSize="30sp" android:gravity="center" android:background="#FFFFFF" android:layout_marginTop="60dp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Parent PIN Required" android:textColor="#FFFFFF" android:textSize="20sp" android:textStyle="bold" android:layout_marginTop="14dp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="PIN Hidden •••• from kids" android:textColor="#A8D5BA" android:textSize="12sp" android:layout_marginBottom="24dp"/><EditText android:id="@+id/pinInput" android:layout_width="match_parent" android:layout_height="52dp" android:background="#FFFFFF" android:hint="Enter PIN ••••" android:gravity="center" android:inputType="numberPassword"/><Button android:id="@+id/btnUnlock" android:layout_width="match_parent" android:layout_height="50dp" android:text="Unlock Dashboard" android:background="#1E8C4A" android:textColor="#FFFFFF" android:layout_marginTop="14dp"/><Button android:id="@+id/btnCancel" android:layout_width="match_parent" android:layout_height="46dp" android:text="Cancel" android:background="#333333" android:textColor="#FFFFFF" android:layout_marginTop="10dp"/></LinearLayout>
-          L3
-          cat > app/src/main/res/layout/activity_dashboard.xml <<'L4'
-          <?xml version="1.0" encoding="utf-8"?><ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#0F3D2E"><LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp"><TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Parent Dashboard • SECURED" android:textColor="#4CAF50" android:textSize="18sp" android:textStyle="bold" android:gravity="center" android:layout_marginBottom="16dp"/><LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:background="#1A4D3A" android:orientation="vertical" android:padding="14dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="CHANGE YOUR PIN HERE" android:textColor="#4CAF50" android:textStyle="bold"/><EditText android:id="@+id/newPinInput" android:layout_width="match_parent" android:layout_height="50dp" android:background="#FFFFFF" android:hint="Enter NEW PIN" android:gravity="center" android:inputType="numberPassword" android:layout_marginTop="8dp"/><Button android:id="@+id/btnSavePin" android:layout_width="match_parent" android:layout_height="46dp" android:text="Save New PIN" android:background="#1E8C4A" android:textColor="#FFFFFF" android:layout_marginTop="10dp"/></LinearLayout><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="What Kids Tried Accessing" android:textColor="#FF6B6B" android:textSize="14sp" android:textStyle="bold" android:layout_marginTop="22dp" android:layout_marginBottom="10dp"/><TextView android:id="@+id/txtHistory" android:layout_width="match_parent" android:layout_height="wrap_content" android:background="#1A4D3A" android:padding="14dp" android:textColor="#FFFFFF" android:textSize="12sp" android:text="No searches yet"/><Button android:id="@+id/btnClear" android:layout_width="match_parent" android:layout_height="44dp" android:text="Clear History" android:background="#333333" android:textColor="#FFFFFF" android:layout_marginTop="10dp"/><Button android:id="@+id/btnLock" android:layout_width="match_parent" android:layout_height="52dp" android:text="Lock Dashboard" android:background="#1E8C4A" android:textColor="#FFFFFF" android:layout_marginTop="18dp"/></LinearLayout></ScrollView>
-          L4
-          cat > app/src/main/res/layout/activity_browser.xml <<'L2'
-          <?xml version="1.0" encoding="utf-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical"><WebView android:id="@+id/webview" android:layout_width="match_parent" android:layout_height="match_parent"/></LinearLayout>
-          L2
-
-          cat > app/src/main/java/com/safeguard/onehub/MainActivity.java <<'J1'
+          EOF
+          cat > app/src/main/res/layout/activity_main.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?><ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#F5F5F0"><LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp" android:gravity="center_horizontal"><TextView android:layout_width="60dp" android:layout_height="60dp" android:text="🛡️" android:textSize="36sp" android:gravity="center" android:background="@drawable/card" android:layout_marginTop="10dp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SafeGuard One Hub" android:textColor="#0F3D2E" android:textSize="22sp" android:textStyle="bold" android:layout_marginTop="8dp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Parental control &amp; safety dashboard" android:textColor="#666666" android:textSize="13sp" android:layout_marginBottom="18dp"/><LinearLayout android:id="@+id/btnSearch" android:layout_width="match_parent" android:layout_height="52dp" android:background="@drawable/card" android:gravity="center_vertical" android:padding="14dp" android:layout_marginBottom="12dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🔍 Safe Google Search" android:textColor="#888888" android:textSize="15sp"/></LinearLayout><LinearLayout android:layout_width="match_parent" android:layout_height="68dp" android:background="@drawable/card" android:gravity="center_vertical" android:padding="14dp" android:layout_marginBottom="10dp" android:orientation="horizontal"><TextView android:layout_width="40dp" android:layout_height="40dp" android:text="🔒" android:gravity="center" android:textSize="22sp"/><LinearLayout android:layout_width="0dp" android:layout_weight="1" android:orientation="vertical" android:layout_marginLeft="10dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="VPN Shield" android:textColor="#000000" android:textStyle="bold" android:textSize="15sp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Secure connection active • Protected" android:textColor="#666666" android:textSize="11sp"/></LinearLayout><TextView android:layout_width="48dp" android:layout_height="26dp" android:text="ON" android:gravity="center" android:background="@drawable/on" android:textColor="#FFFFFF" android:textSize="12sp" android:textStyle="bold"/></LinearLayout><LinearLayout android:layout_width="match_parent" android:layout_height="68dp" android:background="@drawable/card" android:gravity="center_vertical" android:padding="14dp" android:layout_marginBottom="18dp" android:orientation="horizontal"><TextView android:layout_width="40dp" android:layout_height="40dp" android:text="🔍" android:gravity="center" android:textSize="22sp"/><LinearLayout android:layout_width="0dp" android:layout_weight="1" android:orientation="vertical" android:layout_marginLeft="10dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Media Scanner" android:textColor="#000000" android:textStyle="bold" android:textSize="15sp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Scanning photos &amp; messages • Safe" android:textColor="#666666" android:textSize="11sp"/></LinearLayout><TextView android:layout_width="48dp" android:layout_height="26dp" android:text="ON" android:gravity="center" android:background="@drawable/on" android:textColor="#FFFFFF" android:textSize="12sp" android:textStyle="bold"/></LinearLayout><TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Family ID" android:textColor="#0F3D2E" android:textStyle="bold" android:textSize="16sp" android:layout_marginBottom="8dp"/><LinearLayout android:layout_width="match_parent" android:layout_height="72dp" android:background="@drawable/green_border" android:gravity="center_vertical" android:padding="14dp" android:layout_marginBottom="16dp" android:orientation="horizontal"><LinearLayout android:layout_width="0dp" android:layout_weight="1" android:orientation="vertical"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="NDALA" android:textColor="#000000" android:textStyle="bold" android:textSize="20sp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Family ID • Share with family devices" android:textColor="#666666" android:textSize="11sp"/></LinearLayout><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="📋" android:textSize="22sp"/></LinearLayout><LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal"><TextView android:id="@+id/btnTestBlock" android:layout_width="0dp" android:layout_weight="1" android:layout_height="48dp" android:text="TEST BLOCK" android:gravity="center" android:background="@drawable/card" android:textColor="#0F3D2E" android:textStyle="bold" android:layout_marginRight="8dp"/><TextView android:id="@+id/btnParentDash" android:layout_width="0dp" android:layout_weight="1" android:layout_height="48dp" android:text="Parent Dashboard" android:gravity="center" android:background="@drawable/green" android:textColor="#FFFFFF" android:textStyle="bold" android:layout_marginLeft="8dp"/></LinearLayout><LinearLayout android:layout_width="match_parent" android:layout_height="84dp" android:background="@drawable/green" android:gravity="center" android:orientation="vertical" android:layout_marginTop="18dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Created by" android:textColor="#A8D5BA" android:textSize="11sp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Sibusiso D Ndala" android:textColor="#FFFFFF" android:textStyle="bold" android:textSize="18sp"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Founder &amp; Developer • NDALA Safeguard" android:textColor="#A8D5BA" android:textSize="10sp"/></LinearLayout></LinearLayout></ScrollView>
+          EOF
+          cat > app/src/main/res/layout/activity_browser.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent"><WebView android:id="@+id/webview" android:layout_width="match_parent" android:layout_height="match_parent"/></LinearLayout>
+          EOF
+          cat > app/src/main/res/layout/activity_pin.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#0F3D2E" android:orientation="vertical" android:padding="24dp" android:gravity="center_horizontal"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="PIN Required" android:textColor="#FFFFFF" android:textSize="18sp" android:textStyle="bold" android:layout_marginTop="60dp"/><EditText android:id="@+id/pinInput" android:layout_width="match_parent" android:layout_height="48dp" android:background="#FFFFFF" android:hint="Enter PIN" android:gravity="center" android:inputType="numberPassword" android:layout_marginTop="20dp"/><Button android:id="@+id/btnUnlock" android:layout_width="match_parent" android:layout_height="48dp" android:text="Unlock" android:background="#1E8C4A" android:textColor="#FFFFFF" android:layout_marginTop="12dp"/><Button android:id="@+id/btnCancel" android:layout_width="match_parent" android:layout_height="44dp" android:text="Cancel" android:background="#333333" android:textColor="#FFFFFF" android:layout_marginTop="8dp"/></LinearLayout>
+          EOF
+          cat > app/src/main/res/layout/activity_dashboard.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?><ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#0F3D2E"><LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp"><TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Parent Dashboard - SECURED" android:textColor="#4CAF50" android:textSize="18sp" android:textStyle="bold" android:gravity="center" android:layout_marginBottom="16dp"/><EditText android:id="@+id/newPinInput" android:layout_width="match_parent" android:layout_height="48dp" android:background="#FFFFFF" android:hint="New PIN" android:gravity="center" android:inputType="numberPassword"/><Button android:id="@+id/btnSavePin" android:layout_width="match_parent" android:layout_height="44dp" android:text="Save PIN" android:background="#1E8C4A" android:textColor="#FFFFFF" android:layout_marginTop="8dp"/><TextView android:id="@+id/txtHistory" android:layout_width="match_parent" android:layout_height="wrap_content" android:background="#1A4D3A" android:padding="12dp" android:textColor="#FFFFFF" android:textSize="11sp" android:text="No history" android:layout_marginTop="16dp"/><Button android:id="@+id/btnClear" android:layout_width="match_parent" android:layout_height="44dp" android:text="Clear" android:background="#333333" android:textColor="#FFFFFF" android:layout_marginTop="8dp"/><Button android:id="@+id/btnLock" android:layout_width="match_parent" android:layout_height="50dp" android:text="Lock" android:background="#1E8C4A" android:textColor="#FFFFFF" android:layout_marginTop="16dp"/></LinearLayout></ScrollView>
+          EOF
+          cat > app/src/main/java/com/safeguard/onehub/MainActivity.java <<'EOF'
           package com.safeguard.onehub; import android.app.Activity; import android.content.Intent; import android.os.Bundle;
           public class MainActivity extends Activity { protected void onCreate(Bundle b){ super.onCreate(b); setContentView(R.layout.activity_main); findViewById(R.id.btnSearch).setOnClickListener(v->startActivity(new Intent(this, BrowserActivity.class))); findViewById(R.id.btnTestBlock).setOnClickListener(v->{ Intent i=new Intent(this, BrowserActivity.class); i.putExtra("url","https://www.google.com/search?q=pornhub"); startActivity(i); }); findViewById(R.id.btnParentDash).setOnClickListener(v->startActivity(new Intent(this, PinActivity.class))); } }
-          J1
-          cat > app/src/main/java/com/safeguard/onehub/PinActivity.java <<'J2'
+          EOF
+          cat > app/src/main/java/com/safeguard/onehub/PinActivity.java <<'EOF'
           package com.safeguard.onehub; import android.app.Activity; import android.content.Intent; import android.content.SharedPreferences; import android.os.Bundle; import android.widget.EditText; import android.widget.Toast;
-          public class PinActivity extends Activity { protected void onCreate(Bundle b){ super.onCreate(b); setContentView(R.layout.activity_pin); SharedPreferences p=getSharedPreferences("safeguard",0); EditText pin=findViewById(R.id.pinInput); findViewById(R.id.btnUnlock).setOnClickListener(v->{ if(pin.getText().toString().equals(p.getString("parent_pin","1234"))){ startActivity(new Intent(this, DashboardActivity.class)); finish(); } else Toast.makeText(this,"Wrong PIN",0).show(); }); findViewById(R.id.btnCancel).setOnClickListener(v->finish()); } }
-          J2
-          cat > app/src/main/java/com/safeguard/onehub/DashboardActivity.java <<'J3'
+          public class PinActivity extends Activity { protected void onCreate(Bundle b){ super.onCreate(b); setContentView(R.layout.activity_pin); SharedPreferences p=getSharedPreferences("safeguard",0); EditText pin=findViewById(R.id.pinInput); findViewById(R.id.btnUnlock).setOnClickListener(v->{ if(pin.getText().toString().equals(p.getString("parent_pin","1234"))){ startActivity(new Intent(this, DashboardActivity.class)); finish(); } else Toast.makeText(this,"Wrong PIN 1234",0).show(); }); findViewById(R.id.btnCancel).setOnClickListener(v->finish()); } }
+          EOF
+          cat > app/src/main/java/com/safeguard/onehub/DashboardActivity.java <<'EOF'
           package com.safeguard.onehub; import android.app.Activity; import android.content.Intent; import android.content.SharedPreferences; import android.os.Bundle; import android.widget.EditText; import android.widget.TextView; import android.widget.Toast;
-          public class DashboardActivity extends Activity { protected void onCreate(Bundle b){ super.onCreate(b); setContentView(R.layout.activity_dashboard); SharedPreferences p=getSharedPreferences("safeguard",0); TextView h=findViewById(R.id.txtHistory); EditText n=findViewById(R.id.newPinInput); h.setText(p.getString("history","No searches yet - Safe")); findViewById(R.id.btnSavePin).setOnClickListener(v->{ String np=n.getText().toString(); if(np.length()>=4){ p.edit().putString("parent_pin",np).apply(); Toast.makeText(this,"PIN Saved",1).show(); n.setText(""); } }); findViewById(R.id.btnClear).setOnClickListener(v->{ p.edit().putString("history","No searches yet").apply(); h.setText("No searches yet"); }); findViewById(R.id.btnLock).setOnClickListener(v->{ startActivity(new Intent(this, MainActivity.class)); finish(); }); } }
-          J3
-          cat > app/src/main/java/com/safeguard/onehub/BrowserActivity.java <<'J4'
+          public class DashboardActivity extends Activity { protected void onCreate(Bundle b){ super.onCreate(b); setContentView(R.layout.activity_dashboard); SharedPreferences p=getSharedPreferences("safeguard",0); TextView h=findViewById(R.id.txtHistory); EditText n=findViewById(R.id.newPinInput); h.setText(p.getString("history","No history")); findViewById(R.id.btnSavePin).setOnClickListener(v->{ String np=n.getText().toString(); if(np.length()>=4){ p.edit().putString("parent_pin",np).apply(); Toast.makeText(this,"Saved",1).show(); n.setText(""); } }); findViewById(R.id.btnClear).setOnClickListener(v->{ p.edit().putString("history","No history").apply(); h.setText("No history"); }); findViewById(R.id.btnLock).setOnClickListener(v->{ startActivity(new Intent(this, MainActivity.class)); finish(); }); } }
+          EOF
+          cat > app/src/main/java/com/safeguard/onehub/BrowserActivity.java <<'EOF'
           package com.safeguard.onehub; import android.app.Activity; import android.content.SharedPreferences; import android.os.Bundle; import android.webkit.WebView; import android.webkit.WebViewClient;
           public class BrowserActivity extends Activity {
             WebView wv; SharedPreferences prefs;
@@ -102,46 +80,20 @@ jobs:
               prefs=getSharedPreferences("safeguard",0);
               wv=findViewById(R.id.webview);
               wv.getSettings().setJavaScriptEnabled(true);
-              wv.getSettings().setDomStorageEnabled(true);
               wv.setWebViewClient(new WebViewClient(){
                 public boolean shouldOverrideUrlLoading(WebView v, String url){
-                  save(url);
-                  if(blocked(url)){ block(url); return true; }
+                  String l=url.toLowerCase();
+                  if(l.contains("porn")||l.contains("xxx")||l.contains("xnxx")||l.contains("onlyfans")||l.contains("lolita")||l.contains("underage")){
+                    String old=prefs.getString("history",""); prefs.edit().putString("history","BLOCKED: "+url+"\n"+old).apply();
+                    v.loadData("<html><body style='text-align:center;padding:20px;'><h1 style='color:red;'>BLOCKED BY NDALA</h1><p>"+url+"</p><button onclick='window.location.href=\"https://www.google.com\"'>Home</button></body></html>","text/html","UTF-8"); return true;
+                  }
                   return false;
                 }
               });
-              String u=getIntent().getStringExtra("url");
-              if(u!=null){ save(u); if(blocked(u)) wv.loadData(html(u),"text/html","UTF-8"); else wv.loadUrl(u); }
-              else wv.loadUrl("https://www.google.com");
+              String u=getIntent().getStringExtra("url"); if(u!=null) wv.loadUrl(u); else wv.loadUrl("https://www.google.com");
             }
-            boolean blocked(String s){
-              String l=s.toLowerCase();
-              String[] b={"pornhub","xvideos","xnxx","xhamster","redtube","youporn","onlyfans","brazzers","chaturbate","cam4","xxx","porn","sex","adult","nsfw","erotic","hentai","nude","naked","lolita","loli","childporn","underage","jailbait","preteen"};
-              for(String k:b) if(l.contains(k)) return true;
-              return false;
-            }
-            void save(String url){
-              if(url.contains("gen_204")||url.contains("favicon")) return;
-              String old=prefs.getString("history","");
-              if(old.contains("No searches")) old="";
-              String e="";
-              try{
-                if(url.contains("search?q=")){
-                  String q=url.split("q=")[1].split("&")[0].replace("+"," ");
-                  q=java.net.URLDecoder.decode(q,"UTF-8");
-                  if(blocked(q)) e="BLOCKED: "+q+"\n";
-                  else e="Searched: "+q+"\n";
-                } else {
-                  if(blocked(url)) e="BLOCKED: "+url+"\n";
-                  else e="Visited: "+url+"\n";
-                }
-              } catch(Exception ex){ e=url+"\n"; }
-              if(!old.contains(e) && e.length()>3) prefs.edit().putString("history",e+old).apply();
-            }
-            String html(String u){ return "<html><body style='text-align:center;padding:20px;'><div style='border:4px solid red;border-radius:20px;padding:20px;'><h1 style='color:red;'>BLOCKED BY NDALA SAFEGUARD</h1><h2>SITE UNAUTHORISED</h2><p style='color:red;font-weight:bold;'>PORN GRAPHIC / UNDERAGE DETECTED</p><p>"+u+"</p><br><button onclick='window.location.href=\"https://www.google.com\"' style='background:#0F3D2E;color:white;padding:12px 24px;border:none;border-radius:10px;'>Go Home Safe</button></div></body></html>"; }
-            void block(String u){ wv.loadData(html(u),"text/html","UTF-8"); }
           }
-          J4
+          EOF
 
       - uses: gradle/gradle-build-action@v2
         with:
@@ -149,5 +101,5 @@ jobs:
           arguments: :app:assembleDebug
       - uses: actions/upload-artifact@v4
         with:
-          name: SafeGuard-ONLY-LAYOUT-111-GREEN
+          name: SafeGuard-v113-ORIGINAL-LAYOUT-PHOTO
           path: app/build/outputs/apk/debug/*.apk
