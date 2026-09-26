@@ -10,7 +10,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Create root files correctly
+      - name: Fix root files
         run: |
           cat > settings.gradle <<'EOF'
           pluginManagement {
@@ -33,15 +33,11 @@ jobs:
           cat > build.gradle <<'EOF'
           plugins {
               id 'com.android.application' version '8.2.2' apply false
-              id 'org.jetbrains.kotlin.android' version '1.9.10' apply false
-          }
-          task clean(type: Delete) {
-              delete rootProject.buildDir
           }
           EOF
           echo "org.gradle.jvmargs=-Xmx2048m" > gradle.properties
           echo "android.useAndroidX=true" >> gradle.properties
-      - name: Build APK - APP MODULE
+      - name: Build APK
         uses: gradle/gradle-build-action@v2
         with:
           gradle-version: 8.5
