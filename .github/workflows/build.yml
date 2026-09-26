@@ -44,11 +44,11 @@ jobs:
               implementation 'androidx.appcompat:appcompat:1.6.1'
           }
           EOF
-          
+
           rm -rf app/src/main/res app/src/main/java/com
           mkdir -p app/src/main/res/layout app/src/main/res/values
           mkdir -p app/src/main/java/com/ndala/secure
-          
+
           cat > app/src/main/res/values/colors.xml <<'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <resources>
@@ -59,7 +59,7 @@ jobs:
               <color name="dark_gray">#1A1A1A</color>
           </resources>
           EOF
-          
+
           cat > app/src/main/res/values/strings.xml <<'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <resources>
@@ -84,4 +84,196 @@ jobs:
                   android:textColor="#FFC107"
                   android:textSize="28sp"
                   android:textStyle="bold"
-                  android
+                  android:layout_marginTop="60dp"
+                  android:letterSpacing="0.1" />
+
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="Enter Your PIN"
+                  android:textColor="#FFFFFF"
+                  android:textSize="16sp"
+                  android:layout_marginTop="12dp"
+                  android:alpha="0.7"/>
+
+              <!-- 4 DOTS -->
+              <LinearLayout
+                  android:id="@+id/dotsContainer"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:layout_marginTop="40dp"
+                  android:layout_marginBottom="50dp">
+
+                  <View android:id="@+id/dot1" android:layout_width="20dp" android:layout_height="20dp" android:background="@drawable/dot_empty" android:layout_margin="12dp"/>
+                  <View android:id="@+id/dot2" android:layout_width="20dp" android:layout_height="20dp" android:background="@drawable/dot_empty" android:layout_margin="12dp"/>
+                  <View android:id="@+id/dot3" android:layout_width="20dp" android:layout_height="20dp" android:background="@drawable/dot_empty" android:layout_margin="12dp"/>
+                  <View android:id="@+id/dot4" android:layout_width="20dp" android:layout_height="20dp" android:background="@drawable/dot_empty" android:layout_margin="12dp"/>
+              </LinearLayout>
+
+              <!-- KEYPAD -->
+              <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center">
+
+                  <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
+                      <Button android:id="@+id/btn1" style="@style/PinButton" android:text="1"/>
+                      <Button android:id="@+id/btn2" style="@style/PinButton" android:text="2"/>
+                      <Button android:id="@+id/btn3" style="@style/PinButton" android:text="3"/>
+                  </LinearLayout>
+                  <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
+                      <Button android:id="@+id/btn4" style="@style/PinButton" android:text="4"/>
+                      <Button android:id="@+id/btn5" style="@style/PinButton" android:text="5"/>
+                      <Button android:id="@+id/btn6" style="@style/PinButton" android:text="6"/>
+                  </LinearLayout>
+                  <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
+                      <Button android:id="@+id/btn7" style="@style/PinButton" android:text="7"/>
+                      <Button android:id="@+id/btn8" style="@style/PinButton" android:text="8"/>
+                      <Button android:id="@+id/btn9" style="@style/PinButton" android:text="9"/>
+                  </LinearLayout>
+                  <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
+                      <View android:layout_width="88dp" android:layout_height="88dp" android:layout_margin="8dp"/>
+                      <Button android:id="@+id/btn0" style="@style/PinButton" android:text="0"/>
+                      <Button android:id="@+id/btnDel" style="@style/PinButton" android:text="⌫" android:textSize="22sp"/>
+                  </LinearLayout>
+              </LinearLayout>
+
+              <TextView android:id="@+id/statusText" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="" android:textColor="#FFC107" android:textSize="14sp" android:layout_marginTop="30dp"/>
+          </LinearLayout>
+          EOF
+
+          cat > app/src/main/res/values/styles.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+              <style name="PinButton">
+                  <item name="android:layout_width">88dp</item>
+                  <item name="android:layout_height">88dp</item>
+                  <item name="android:layout_margin">8dp</item>
+                  <item name="android:background">@drawable/btn_circle</item>
+                  <item name="android:textColor">#FFFFFF</item>
+                  <item name="android:textSize">28sp</item>
+                  <item name="android:textStyle">bold</item>
+              </style>
+          </resources>
+          EOF
+
+          mkdir -p app/src/main/res/drawable
+          cat > app/src/main/res/drawable/btn_circle.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <selector xmlns:android="http://schemas.android.com/apk/res/android">
+              <item android:state_pressed="true">
+                  <shape android:shape="oval"><solid android:color="#FFC107"/><stroke android:width="1dp" android:color="#FFC107"/></shape>
+              </item>
+              <item>
+                  <shape android:shape="oval"><solid android:color="#1A1A1A"/><stroke android:width="1dp" android:color="#333333"/></shape>
+              </item>
+          </selector>
+          EOF
+
+          cat > app/src/main/res/drawable/dot_empty.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
+              <solid android:color="#000000"/>
+              <stroke android:width="2dp" android:color="#333333"/>
+              <size android:width="20dp" android:height="20dp"/>
+          </shape>
+          EOF
+
+          cat > app/src/main/res/drawable/dot_filled.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
+              <solid android:color="#FFC107"/>
+              <size android:width="20dp" android:height="20dp"/>
+          </shape>
+          EOF
+
+          cat > app/src/main/AndroidManifest.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+              <application android:label="NDALA SECURE" android:theme="@android:style/Theme.Black.NoTitleBar">
+                  <activity android:name=".MainActivity" android:exported="true">
+                      <intent-filter>
+                          <action android:name="android.intent.action.MAIN"/>
+                          <category android:name="android.intent.category.LAUNCHER"/>
+                      </intent-filter>
+                  </activity>
+              </application>
+          </manifest>
+          EOF
+
+          cat > app/src/main/java/com/ndala/secure/MainActivity.java <<'EOF'
+          package com.ndala.secure;
+          import android.app.Activity;
+          import android.os.Bundle;
+          import android.view.View;
+          import android.widget.Button;
+          import android.widget.TextView;
+          import android.widget.Toast;
+
+          public class MainActivity extends Activity {
+              private StringBuilder pin = new StringBuilder();
+              private View dot1, dot2, dot3, dot4;
+              private TextView status;
+              private final String CORRECT_PIN = "1234"; // Change this to your PIN
+
+              @Override
+              protected void onCreate(Bundle b) {
+                  super.onCreate(b);
+                  setContentView(R.layout.activity_main);
+
+                  dot1 = findViewById(R.id.dot1);
+                  dot2 = findViewById(R.id.dot2);
+                  dot3 = findViewById(R.id.dot3);
+                  dot4 = findViewById(R.id.dot4);
+                  status = findViewById(R.id.statusText);
+
+                  int[] btnIds = {R.id.btn0,R.id.btn1,R.id.btn2,R.id.btn3,R.id.btn4,R.id.btn5,R.id.btn6,R.id.btn7,R.id.btn8,R.id.btn9};
+                  for (int id : btnIds) {
+                      findViewById(id).setOnClickListener(v -> {
+                          if (pin.length() < 4) {
+                              Button btn = (Button) v;
+                              pin.append(btn.getText().toString());
+                              updateDots();
+                              if (pin.length() == 4) checkPin();
+                          }
+                      });
+                  }
+
+                  findViewById(R.id.btnDel).setOnClickListener(v -> {
+                      if (pin.length() > 0) {
+                          pin.deleteCharAt(pin.length()-1);
+                          updateDots();
+                          status.setText("");
+                      }
+                  });
+              }
+
+              private void updateDots() {
+                  View[] dots = {dot1, dot2, dot3, dot4};
+                  for (int i = 0; i < 4; i++) {
+                      if (i < pin.length()) dots[i].setBackgroundResource(R.drawable.dot_filled);
+                      else dots[i].setBackgroundResource(R.drawable.dot_empty);
+                  }
+              }
+
+              private void checkPin() {
+                  if (pin.toString().equals(CORRECT_PIN)) {
+                      status.setText("✓ ACCESS GRANTED - NDALA SECURE!");
+                      Toast.makeText(this, "Welcome Boss! PIN Correct!", Toast.LENGTH_LONG).show();
+                  } else {
+                      status.setText("✗ WRONG PIN - TRY AGAIN");
+                      pin.setLength(0);
+                      updateDots();
+                      status.postDelayed(() -> status.setText(""), 1500);
+                  }
+              }
+          }
+          EOF
+      - name: Build APK
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: 8.5
+          arguments: :app:assembleDebug
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: NDALA-SECURE-PIN-V2
+          path: app/build/outputs/apk/debug/*.apk
